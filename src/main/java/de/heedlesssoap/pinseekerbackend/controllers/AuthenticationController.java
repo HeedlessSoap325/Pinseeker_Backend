@@ -1,9 +1,9 @@
-package de.heedlesssoap.geckobackend.controllers;
+package de.heedlesssoap.pinseekerbackend.controllers;
 
-import de.heedlesssoap.geckobackend.entities.DTOs.LoginResponseDTO;
-import de.heedlesssoap.geckobackend.entities.DTOs.RegistrationDTO;
-import de.heedlesssoap.geckobackend.exceptions.UsernameAlreadyExistsException;
-import de.heedlesssoap.geckobackend.services.AuthenticationService;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.LoginResponseDTO;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.RegistrationDTO;
+import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsException;
+import de.heedlesssoap.pinseekerbackend.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package de.heedlesssoap.geckobackend.entities.DTOs;
+package de.heedlesssoap.pinseekerbackend.entities.DTOs;
 
 public class LoginResponseDTO {
     private String username;

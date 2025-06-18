@@ -1,4 +1,4 @@
-package de.heedlesssoap.geckobackend.configuration;
+package de.heedlesssoap.pinseekerbackend.configuration;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -6,7 +6,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import de.heedlesssoap.geckobackend.utils.RSAKeyProperties;
+import de.heedlesssoap.pinseekerbackend.utils.RSAKeyProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

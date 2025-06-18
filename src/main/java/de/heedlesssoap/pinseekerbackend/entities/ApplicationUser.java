@@ -1,4 +1,4 @@
-package de.heedlesssoap.geckobackend.entities;
+package de.heedlesssoap.pinseekerbackend.entities;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.userdetails.UserDetails;

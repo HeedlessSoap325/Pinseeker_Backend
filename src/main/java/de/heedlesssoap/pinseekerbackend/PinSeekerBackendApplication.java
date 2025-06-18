@@ -1,9 +1,9 @@
-package de.heedlesssoap.geckobackend;
+package de.heedlesssoap.pinseekerbackend;
 
-import de.heedlesssoap.geckobackend.entities.ApplicationUser;
-import de.heedlesssoap.geckobackend.entities.Role;
-import de.heedlesssoap.geckobackend.repositories.RoleRepository;
-import de.heedlesssoap.geckobackend.repositories.UserRepository;
+import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
+import de.heedlesssoap.pinseekerbackend.entities.Role;
+import de.heedlesssoap.pinseekerbackend.repositories.RoleRepository;
+import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,10 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @SpringBootApplication
-public class GeckobackendApplication {
+public class PinSeekerBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GeckobackendApplication.class, args);
+		SpringApplication.run(PinSeekerBackendApplication.class, args);
 	}
 
 	@Bean

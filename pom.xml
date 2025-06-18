@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>de.heedlesssoap</groupId>
-	<artifactId>geckobackend</artifactId>
+	<artifactId>pinseekerbackend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>geckobackend</name>
-	<description>The Backend for GeckoFind</description>
+	<name>pinseekerbackend</name>
+	<description>The Backend for PinSeeker</description>
 	<url/>
 	<licenses>
 		<license/>

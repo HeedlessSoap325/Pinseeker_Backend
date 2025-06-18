@@ -1,6 +1,6 @@
-package de.heedlesssoap.geckobackend.repositories;
+package de.heedlesssoap.pinseekerbackend.repositories;
 
-import de.heedlesssoap.geckobackend.entities.Role;
+import de.heedlesssoap.pinseekerbackend.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

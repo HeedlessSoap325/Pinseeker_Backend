@@ -1,6 +1,6 @@
-package de.heedlesssoap.geckobackend.services;
+package de.heedlesssoap.pinseekerbackend.services;
 
-import de.heedlesssoap.geckobackend.repositories.UserRepository;
+import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

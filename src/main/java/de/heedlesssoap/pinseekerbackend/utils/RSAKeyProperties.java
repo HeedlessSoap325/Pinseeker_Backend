@@ -1,4 +1,4 @@
-package de.heedlesssoap.geckobackend.utils;
+package de.heedlesssoap.pinseekerbackend.utils;
 
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package de.heedlesssoap.geckobackend.exceptions;
+package de.heedlesssoap.pinseekerbackend.exceptions;
 
 public class UsernameAlreadyExistsException extends Exception {
     public UsernameAlreadyExistsException(){
