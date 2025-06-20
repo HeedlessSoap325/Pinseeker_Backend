@@ -2,8 +2,8 @@ package de.heedlesssoap.pinseekerbackend.services;
 
 import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
 import de.heedlesssoap.pinseekerbackend.entities.Role;
+import de.heedlesssoap.pinseekerbackend.exceptions.InvalideJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -20,15 +20,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class TokenService {
+    private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private JwtEncoder jwtEncoder;
-
-    @Autowired
-    private JwtDecoder jwtDecoder;
-
-    @Autowired
-    private UserRepository userRepository;
+    public TokenService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder, UserRepository userRepository) {
+        this.jwtEncoder = jwtEncoder;
+        this.jwtDecoder = jwtDecoder;
+        this.userRepository = userRepository;
+    }
 
     public String generateJwt(String username, Collection<Role> authorities){
         //This is okay, because the AuthenticationManager would throw an Exception, if the User wouldn't exist
@@ -55,6 +55,13 @@ public class TokenService {
     public String decodeUsernameFromJWT(String token) {
         token = cleanBearerToken(token);
         return jwtDecoder.decode(token).getSubject();
+    }
+
+    public ApplicationUser getSenderFromJWT(String token) throws InvalideJWTTokenException {
+        token = cleanBearerToken(token);
+        String username = jwtDecoder.decode(token).getSubject();
+        return userRepository.findByUsername(username)
+                .orElseThrow(InvalideJWTTokenException::new);
     }
 
     public List<Role> decodeRolesFromJWT(String token){

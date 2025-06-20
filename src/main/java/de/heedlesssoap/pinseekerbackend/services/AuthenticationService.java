@@ -6,7 +6,6 @@ import de.heedlesssoap.pinseekerbackend.entities.Role;
 import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsException;
 import de.heedlesssoap.pinseekerbackend.repositories.RoleRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,21 +23,19 @@ import java.util.Set;
 @Service
 @Transactional
 public class AuthenticationService {
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private TokenService tokenService;
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenService tokenService) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
+    }
 
     public String registerUser(String username, String password) throws UsernameAlreadyExistsException {
         if (userRepository.findByUsername(username).isPresent()) {
