@@ -35,8 +35,8 @@ public class PinsService {
     }
 
     private boolean pinValid(Pin pin){
-        return pin.getLatitude() <= 180
-                && pin.getLatitude() >= -180
+        return pin.getLatitude() <= 90
+                && pin.getLatitude() >= -90
                 && pin.getLongitude() <= 180
                 && pin.getLongitude() >= -180
                 && pin.getDifficulty() >= 1
@@ -61,9 +61,14 @@ public class PinsService {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Pin pin = pindto.toPin();
 
+        if(pinRepository.findByName(pin.getName()).isPresent()){
+            throw new IllegalArgumentException(Constants.PIN_ALREADY_EXISTS);
+        }
+
         pin.setPinId(null);
         pin.setCreatedAt(new Date());
         pin.setHider(sender);
+        pin.setPremium(sender.getIsPremium() ? pin.getPremium() : false);
 
         if(!pinValid(pin)){
             throw new InvalidPinException();
