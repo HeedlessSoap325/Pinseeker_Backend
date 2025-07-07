@@ -54,7 +54,7 @@ public class Pin {
 
     private String description;
 
-    @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent_pin", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Log> logs;
 
     public Pin() {
