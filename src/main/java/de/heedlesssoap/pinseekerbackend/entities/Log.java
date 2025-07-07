@@ -17,9 +17,9 @@ public class Log {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "log_user_junction",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "log_id")}
+            name = "user_log_junction",
+            joinColumns = {@JoinColumn(name = "log_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
     private ApplicationUser logger;
 

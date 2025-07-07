@@ -1,5 +1,6 @@
 package de.heedlesssoap.pinseekerbackend.controllers;
 
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.LogDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.PinDTO;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidPinException;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/pins")
@@ -40,7 +43,7 @@ public class PinsController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> createPin(@RequestHeader("Authorization") String token, @RequestBody PinDTO pindto) throws InvalidJWTTokenException, InvalidPinException {
+    public ResponseEntity<String> createPin(@RequestHeader("Authorization") String token, @RequestBody PinDTO pindto) throws InvalidJWTTokenException, InvalidPinException, IllegalArgumentException {
         return pinsService.createPin(token, pindto);
     }
 
@@ -59,27 +62,26 @@ public class PinsController {
         return pinsService.deletePin(token, pin_id);
     }
 
+    @PostMapping("/{pin_id}/logs")
+    public ResponseEntity<String> createLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @RequestBody LogDTO logdto) throws InvalidJWTTokenException, IllegalArgumentException{
+        return pinsService.createLog(token, pin_id, logdto);
+    }
+
+    @GetMapping("/{pin_id}/logs")
+    public ResponseEntity<List<LogDTO>> getLogsForPin(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id) throws IllegalArgumentException, InvalidJWTTokenException{
+        return pinsService.getLogs(token, pin_id);
+    }
+
+    @PutMapping("/{pin_id}/logs")
+    public ResponseEntity<String> editLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @RequestHeader("log_id") Integer log_id , @RequestBody LogDTO new_log) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException{
+        return pinsService.editLog(token, pin_id, log_id, new_log);
+    }
+
+    @DeleteMapping("/{pin_id}/logs")
+    public ResponseEntity<String> deleteLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @RequestHeader("log_id") Integer log_id) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException{
+        return pinsService.deleteLog(token, pin_id, log_id);
+    }
     /**
-     @GetMapping("/{pin_id}/logs")
-     public List<Log> getLogsForPin(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id){
-     return pinsService.getLogs(token, pin_id);
-     }
-
-     @PostMapping("/{pin_id}/logs")
-     public ResponseEntity<String> createLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, Log log){
-     return pinsService.createLog(token, pin_id, log);
-     }
-
-     @PutMapping("/{pin_id}/logs")
-     public ResponseEntity<String> editLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, Log new_log){
-     return pinsService.editLog(token, pin_id, new_log);
-     }
-
-     @DeleteMapping("/{pin_id}/logs")
-     public ResponseEntity<String> deleteLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @RequestHeader("log_id") Integer log_id){
-     return pinsService.deleteLog(token, pin_id, log_id);
-     }
-
      @GetMapping("/findNearMe")
      public List<PinDTO> findPinsNearMe(@RequestHeader("Authorization") String token, Location){
 

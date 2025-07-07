@@ -22,6 +22,8 @@ public class Constants {
     public static final String PIN_NOT_FOUND = "This Pin does not exist.";
     public static final String PIN_PREMIUM_ONLY = "This Pin is premium-only.";
 
+    public static final String LOG_NOT_FOUND = "This Log does not exist.";
+
     public static final Boolean IS_IN_DEVELOPMENT = true;
     public static final String DEVELOPMENT_DEFAULT_ADMIN_NAME = "admin";
     public static final String DEVELOPMENT_DEFAULT_ADMIN_PASSWORD = "password";
