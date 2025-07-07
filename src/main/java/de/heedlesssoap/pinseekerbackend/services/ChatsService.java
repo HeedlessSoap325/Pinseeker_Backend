@@ -8,7 +8,7 @@ import de.heedlesssoap.pinseekerbackend.entities.DTOs.GetChatDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DirectMessage;
 import de.heedlesssoap.pinseekerbackend.entities.enums.ChatState;
 import de.heedlesssoap.pinseekerbackend.exceptions.ChatAlreadyExistsException;
-import de.heedlesssoap.pinseekerbackend.exceptions.InvalideJWTTokenException;
+import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.repositories.ChatRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.DirectMessageRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
@@ -121,7 +121,7 @@ public class ChatsService {
     }
 
 
-    public HashMap<Integer, HashMap<Integer, String>> getChats(String token) throws InvalideJWTTokenException, IllegalArgumentException {
+    public HashMap<Integer, HashMap<Integer, String>> getChats(String token) throws InvalidJWTTokenException, IllegalArgumentException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
 
         List<Chat> user_chats = chatRepository.findChatsByParticipantsContaining(Set.of(sender))
@@ -130,14 +130,14 @@ public class ChatsService {
         return this.convertToChatsList(user_chats, sender);
     }
 
-    public GetChatDTO getChat(String token, Integer chatId) throws InvalideJWTTokenException, IllegalArgumentException {
+    public GetChatDTO getChat(String token, Integer chatId) throws InvalidJWTTokenException, IllegalArgumentException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Chat requested_chat = this.getCheckedChat(chatId, sender);
 
         return this.convertToChatDTO(requested_chat, sender);
     }
 
-    public ResponseEntity<String> sendMessage(String token, Integer chatId, DirectMessage message) throws InvalideJWTTokenException, IllegalArgumentException {
+    public ResponseEntity<String> sendMessage(String token, Integer chatId, DirectMessage message) throws InvalidJWTTokenException, IllegalArgumentException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Chat chat = getCheckedChat(chatId, sender);
 
@@ -162,7 +162,7 @@ public class ChatsService {
         return new ResponseEntity<>("Message sent successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> openChat(String token, Integer targetUserId) throws InvalideJWTTokenException, UsernameNotFoundException, ChatAlreadyExistsException {
+    public ResponseEntity<String> openChat(String token, Integer targetUserId) throws InvalidJWTTokenException, UsernameNotFoundException, ChatAlreadyExistsException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         ApplicationUser target_user = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new UsernameNotFoundException("Target User does not exist"));
@@ -178,7 +178,7 @@ public class ChatsService {
         return new ResponseEntity<>("Chat created successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateChat(String token, Integer chatId, ChatState state) throws InvalideJWTTokenException, IllegalArgumentException {
+    public ResponseEntity<String> updateChat(String token, Integer chatId, ChatState state) throws InvalidJWTTokenException, IllegalArgumentException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Chat chat = this.getCheckedChat(chatId, sender);
         chat.setChatState(state);
@@ -187,7 +187,7 @@ public class ChatsService {
         return new ResponseEntity<>("Chat updated successfully", HttpStatusCode.valueOf(200));
     }
 
-    public ResponseEntity<String> editMessage(String token, Integer chatId, Integer directMessageId, DirectMessage message) throws InvalideJWTTokenException, IllegalArgumentException {
+    public ResponseEntity<String> editMessage(String token, Integer chatId, Integer directMessageId, DirectMessage message) throws InvalidJWTTokenException, IllegalArgumentException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Chat chat = this.getCheckedChat(chatId, sender);
         DirectMessage editable_message = this.getCheckedMessage(chat, sender, directMessageId);
@@ -201,7 +201,7 @@ public class ChatsService {
         return new ResponseEntity<>("Message edited successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> deleteMessage(String token, Integer chatId, Integer directMessageId) throws InvalideJWTTokenException, IllegalArgumentException {
+    public ResponseEntity<String> deleteMessage(String token, Integer chatId, Integer directMessageId) throws InvalidJWTTokenException, IllegalArgumentException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Chat chat = this.getCheckedChat(chatId, sender);
         DirectMessage message = this.getCheckedMessage(chat, sender, directMessageId);

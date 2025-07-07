@@ -1,5 +1,6 @@
 package de.heedlesssoap.pinseekerbackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.userdetails.UserDetails;
 

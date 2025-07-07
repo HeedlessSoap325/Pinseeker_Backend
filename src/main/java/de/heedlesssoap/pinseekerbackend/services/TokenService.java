@@ -2,7 +2,7 @@ package de.heedlesssoap.pinseekerbackend.services;
 
 import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
 import de.heedlesssoap.pinseekerbackend.entities.Role;
-import de.heedlesssoap.pinseekerbackend.exceptions.InvalideJWTTokenException;
+import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -57,11 +57,11 @@ public class TokenService {
         return jwtDecoder.decode(token).getSubject();
     }
 
-    public ApplicationUser getSenderFromJWT(String token) throws InvalideJWTTokenException {
+    public ApplicationUser getSenderFromJWT(String token) throws InvalidJWTTokenException {
         token = cleanBearerToken(token);
         String username = jwtDecoder.decode(token).getSubject();
         return userRepository.findByUsername(username)
-                .orElseThrow(InvalideJWTTokenException::new);
+                .orElseThrow(InvalidJWTTokenException::new);
     }
 
     public List<Role> decodeRolesFromJWT(String token){
