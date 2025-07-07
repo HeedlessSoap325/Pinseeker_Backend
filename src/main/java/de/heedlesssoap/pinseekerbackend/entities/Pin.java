@@ -200,4 +200,24 @@ public class Pin {
     public void setLogs(Set<Log> logs) {
         this.logs = logs;
     }
+
+    @Override
+    public String toString() {
+        return "Pin{" +
+                "pin_id=" + pin_id +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", premium=" + premium +
+                ", difficulty=" + difficulty +
+                ", terrain=" + terrain +
+                ", size=" + size +
+                ", hider=" + hider +
+                ", created_at=" + created_at +
+                ", hint='" + hint + '\'' +
+                ", description='" + description + '\'' +
+                ", logs=" + logs +
+                '}';
+    }
 }
