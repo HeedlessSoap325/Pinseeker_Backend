@@ -1,6 +1,5 @@
 package de.heedlesssoap.pinseekerbackend.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -20,6 +19,9 @@ public class ApplicationUser implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private Boolean isPremium;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role_junction",
@@ -31,12 +33,14 @@ public class ApplicationUser implements UserDetails {
     public ApplicationUser() {
         super();
         authorities = new HashSet<>();
+        isPremium = false;
     }
 
-    public ApplicationUser(String username, String password, Set<Role> authorities) {
+    public ApplicationUser(String username, String password, Set<Role> authorities, Boolean isPremium) {
         this.username = username;
         this.password = password;
         this.authorities = authorities;
+        this.isPremium = isPremium;
     }
 
     public Integer getUserId() {
@@ -65,6 +69,14 @@ public class ApplicationUser implements UserDetails {
         this.password = password;
     }
 
+    public Boolean getIsPremium() {
+        return isPremium;
+    }
+
+    public void setIsPremium(Boolean premium) {
+        isPremium = premium;
+    }
+
     @Override
     public Set<Role> getAuthorities() {
         return this.authorities;
@@ -85,6 +97,7 @@ public class ApplicationUser implements UserDetails {
                 "user_id=" + user_id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", isPremium=" + isPremium +
                 ", authorities=" + authorities +
                 '}';
     }

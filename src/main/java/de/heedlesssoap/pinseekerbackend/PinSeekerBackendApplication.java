@@ -31,7 +31,7 @@ public class PinSeekerBackendApplication {
 			roles.add(adminRole);
 
 			//creates a default admin user on startup, this is meant for testing and development only and should be deleted in production
-			ApplicationUser admin = new ApplicationUser("admin", passwordEncode.encode("password"), roles);
+			ApplicationUser admin = new ApplicationUser("admin", passwordEncode.encode("password"), roles, true);
 
 			userRepository.save(admin);
 		};

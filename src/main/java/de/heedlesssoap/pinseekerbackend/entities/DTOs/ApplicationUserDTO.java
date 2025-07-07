@@ -7,12 +7,15 @@ public class ApplicationUserDTO {
 
     private String username;
 
+    private Boolean isPremium;
+
     public ApplicationUserDTO() {
     }
 
-    public ApplicationUserDTO(Integer user_id, String username) {
+    public ApplicationUserDTO(Integer user_id, String username, Boolean isPremium) {
         this.username = username;
         this.user_id = user_id;
+        this.isPremium = isPremium;
     }
 
     public Integer getUserId() {
@@ -31,9 +34,18 @@ public class ApplicationUserDTO {
         this.username = username;
     }
 
+    public Boolean getIsPremium() {
+        return isPremium;
+    }
+
+    public void setIsPremium(Boolean premium) {
+        isPremium = premium;
+    }
+
     public ApplicationUserDTO fromApplicationUser(ApplicationUser applicationUser) {
         this.user_id = applicationUser.getUserId();
         this.username = applicationUser.getUsername();
+        this.isPremium = applicationUser.getIsPremium();
         return this;
     }
 }

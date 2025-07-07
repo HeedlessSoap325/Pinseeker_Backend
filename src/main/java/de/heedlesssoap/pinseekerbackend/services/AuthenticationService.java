@@ -50,7 +50,7 @@ public class AuthenticationService {
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(userRole);
 
-        return userRepository.save(new ApplicationUser(username, encodedPassword, userRoles)).getUsername();
+        return userRepository.save(new ApplicationUser(username, encodedPassword, userRoles, false)).getUsername();
     }
 
     public LoginResponseDTO loginUser(String username, String password) {
