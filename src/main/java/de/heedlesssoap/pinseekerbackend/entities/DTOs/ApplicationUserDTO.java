@@ -1,13 +1,11 @@
 package de.heedlesssoap.pinseekerbackend.entities.DTOs;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class ApplicationUserDTO {
     private Integer user_id;
 
     private String username;
 
-    public ApplicationUserDTO( Integer user_id, String username) {
+    public ApplicationUserDTO(Integer user_id, String username) {
         this.username = username;
         this.user_id = user_id;
     }

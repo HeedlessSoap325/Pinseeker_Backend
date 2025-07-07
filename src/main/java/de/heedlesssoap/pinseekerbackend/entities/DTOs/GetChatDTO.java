@@ -1,6 +1,5 @@
 package de.heedlesssoap.pinseekerbackend.entities.DTOs;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import de.heedlesssoap.pinseekerbackend.entities.enums.ChatState;
 
 import java.util.Set;
