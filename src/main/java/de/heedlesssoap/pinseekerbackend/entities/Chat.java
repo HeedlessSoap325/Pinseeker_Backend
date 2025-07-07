@@ -21,12 +21,7 @@ public class Chat {
     )
     private Set<ApplicationUser> participants;
 
-    @OneToMany
-    @JoinTable(
-            name = "chat_message_junction",
-            joinColumns = {@JoinColumn(name = "chat_id")},
-            inverseJoinColumns = {@JoinColumn(name = "direct_message_id")}
-    )
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DirectMessage> messages;
 
     @Enumerated(EnumType.STRING)
@@ -74,5 +69,15 @@ public class Chat {
 
     public void setChatState(ChatState chat_state) {
         this.chat_state = chat_state;
+    }
+
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "chat_id=" + chat_id +
+                ", participants=" + participants +
+                ", messages=" + messages +
+                ", chat_state=" + chat_state +
+                '}';
     }
 }
