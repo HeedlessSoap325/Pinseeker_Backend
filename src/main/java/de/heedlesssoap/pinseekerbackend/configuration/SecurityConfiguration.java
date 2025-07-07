@@ -49,6 +49,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/auth/**").permitAll();
                     auth.requestMatchers("/chats/**").hasAnyRole("USER", "ADMIN");
+                    auth.requestMatchers("/pins/**").hasAnyRole("USER", "ADMIN");
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
                 });
