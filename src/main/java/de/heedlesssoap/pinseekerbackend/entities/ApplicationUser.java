@@ -77,4 +77,14 @@ public class ApplicationUser implements UserDetails {
     public boolean isAccountNonLocked() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "ApplicationUser{" +
+                "user_id=" + user_id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", authorities=" + authorities +
+                '}';
+    }
 }
