@@ -4,7 +4,6 @@ import de.heedlesssoap.pinseekerbackend.entities.DTOs.LoginResponseDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.RegistrationDTO;
 import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsException;
 import de.heedlesssoap.pinseekerbackend.services.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,8 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
+
+    public AuthenticationController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<String> handleUsernameAlreadyExists() {

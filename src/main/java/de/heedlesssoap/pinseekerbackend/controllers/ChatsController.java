@@ -6,7 +6,6 @@ import de.heedlesssoap.pinseekerbackend.entities.enums.ChatState;
 import de.heedlesssoap.pinseekerbackend.exceptions.ChatAlreadyExistsException;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalideJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.services.ChatsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,8 +18,11 @@ import java.util.HashMap;
 @CrossOrigin("*")
 public class ChatsController {
 
-    @Autowired
-    private ChatsService chatsService;
+    private final ChatsService chatsService;
+
+    public ChatsController(ChatsService chatsService) {
+        this.chatsService = chatsService;
+    }
 
     @ExceptionHandler(InvalideJWTTokenException.class)
     public ResponseEntity<String> handleInvalideJWTTokenException(InvalideJWTTokenException exception){
