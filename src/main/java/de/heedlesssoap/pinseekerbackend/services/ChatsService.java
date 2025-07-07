@@ -16,6 +16,7 @@ import de.heedlesssoap.pinseekerbackend.utils.DateUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,13 +48,13 @@ public class ChatsService {
         ApplicationUser otherUser = chat.getParticipants().stream()
                 .filter(user -> !user.getUserId().equals(requestSender.getUserId()))
                 .findFirst().get();
-        ApplicationUserDTO otherUserDTO = new ApplicationUserDTO(otherUser.getUserId(), otherUser.getUsername());
+        ApplicationUserDTO otherUserDTO = new ApplicationUserDTO().fromApplicationUser(otherUser);
 
         Set<DirectMessageDTO> messageDTOs = chat.getMessages().stream()
                 .map(message -> {
                     DirectMessageDTO directMessageDTO = new DirectMessageDTO();
                     directMessageDTO.setDirectMessageId(message.getDirectMessageId());
-                    directMessageDTO.setSender(new ApplicationUserDTO(message.getSender().getUserId(), message.getSender().getUsername()));
+                    directMessageDTO.setSender(new ApplicationUserDTO().fromApplicationUser(message.getSender()));
                     directMessageDTO.setCreatedAt(message.getCreatedAt());
 
                     if (message.getSender().equals(requestSender)) {
@@ -94,18 +95,18 @@ public class ChatsService {
         return chat_list;
     }
 
-    public Chat getCheckedChat(Integer chat_id, ApplicationUser requesting_user) throws IllegalArgumentException {
+    public Chat getCheckedChat(Integer chat_id, ApplicationUser requesting_user) throws IllegalArgumentException, AccessDeniedException {
         Chat requested_chat = chatRepository.findById(chat_id)
                 .orElseThrow(() -> new IllegalArgumentException("Requested Chat does not exist"));
 
         if(!requested_chat.getParticipants().contains(requesting_user)) {
-            throw new IllegalArgumentException("Sender is not part of this chat");
+            throw new AccessDeniedException("Sender is not part of this chat");
         }
 
         return requested_chat;
     }
 
-    private DirectMessage getCheckedMessage(Chat checked_chat, ApplicationUser sender, Integer directMessageId) throws IllegalArgumentException {
+    private DirectMessage getCheckedMessage(Chat checked_chat, ApplicationUser sender, Integer directMessageId) throws IllegalArgumentException, AccessDeniedException {
         DirectMessage requested_message = directMessageRepository.findById(directMessageId)
                 .orElseThrow(() -> new IllegalArgumentException("Direct Message does not exist"));
 
@@ -114,7 +115,7 @@ public class ChatsService {
         }
 
         if(!requested_message.getSender().equals(sender)) {
-            throw new IllegalArgumentException("You are not the owner of this message");
+            throw new AccessDeniedException("You are not the owner of this message");
         }
 
         return requested_message;
@@ -130,14 +131,14 @@ public class ChatsService {
         return this.convertToChatsList(user_chats, sender);
     }
 
-    public GetChatDTO getChat(String token, Integer chatId) throws InvalidJWTTokenException, IllegalArgumentException {
+    public GetChatDTO getChat(String token, Integer chatId) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Chat requested_chat = this.getCheckedChat(chatId, sender);
 
         return this.convertToChatDTO(requested_chat, sender);
     }
 
-    public ResponseEntity<String> sendMessage(String token, Integer chatId, DirectMessage message) throws InvalidJWTTokenException, IllegalArgumentException {
+    public ResponseEntity<String> sendMessage(String token, Integer chatId, DirectMessage message) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Chat chat = getCheckedChat(chatId, sender);
 
@@ -178,7 +179,7 @@ public class ChatsService {
         return new ResponseEntity<>("Chat created successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateChat(String token, Integer chatId, ChatState state) throws InvalidJWTTokenException, IllegalArgumentException {
+    public ResponseEntity<String> updateChat(String token, Integer chatId, ChatState state) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Chat chat = this.getCheckedChat(chatId, sender);
         chat.setChatState(state);
@@ -187,7 +188,7 @@ public class ChatsService {
         return new ResponseEntity<>("Chat updated successfully", HttpStatusCode.valueOf(200));
     }
 
-    public ResponseEntity<String> editMessage(String token, Integer chatId, Integer directMessageId, DirectMessage message) throws InvalidJWTTokenException, IllegalArgumentException {
+    public ResponseEntity<String> editMessage(String token, Integer chatId, Integer directMessageId, DirectMessage message) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Chat chat = this.getCheckedChat(chatId, sender);
         DirectMessage editable_message = this.getCheckedMessage(chat, sender, directMessageId);
@@ -201,7 +202,7 @@ public class ChatsService {
         return new ResponseEntity<>("Message edited successfully", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> deleteMessage(String token, Integer chatId, Integer directMessageId) throws InvalidJWTTokenException, IllegalArgumentException {
+    public ResponseEntity<String> deleteMessage(String token, Integer chatId, Integer directMessageId) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Chat chat = this.getCheckedChat(chatId, sender);
         DirectMessage message = this.getCheckedMessage(chat, sender, directMessageId);
