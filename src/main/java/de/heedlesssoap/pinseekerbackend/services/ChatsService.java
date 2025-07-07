@@ -53,10 +53,10 @@ public class ChatsService {
                 .map(message -> {
                     DirectMessageDTO directMessageDTO = new DirectMessageDTO();
                     directMessageDTO.setDirectMessageId(message.getDirectMessageId());
-                    directMessageDTO.setSenderId(message.getSenderId());
+                    directMessageDTO.setSender(new ApplicationUserDTO(message.getSender().getUserId(), message.getSender().getUsername()));
                     directMessageDTO.setCreatedAt(message.getCreatedAt());
 
-                    if (message.getSenderId().equals(requestSender.getUserId())) {
+                    if (message.getSender().equals(requestSender)) {
                         directMessageDTO.setEncryptedMessage(message.getSenderEncryptedMessage());
                         directMessageDTO.setEncryptedAESKey(message.getSenderEncryptedAESKey());
                     }else{
@@ -81,14 +81,14 @@ public class ChatsService {
                     .filter(user -> !user.getUserId().equals(requestSender.getUserId()))
                     .findFirst().get();
 
-            DirectMessage last_message = directMessageRepository.getLastMessageInChat(chat.getChatId())
+            DirectMessage last_message = directMessageRepository.getLastMessageInChat(chat)
                     .orElse(new DirectMessage());
 
             HashMap<Integer, String> chat_info = new HashMap<>();
             chat_info.put(0, otherUser.getUsername());
             chat_info.put(1, DateUtils.formatDate(last_message.getCreatedAt()));
-            chat_info.put(2, last_message.getSenderId().equals(requestSender.getUserId()) ? last_message.getSenderEncryptedAESKey() : last_message.getReceiverEncryptedAESKey());
-            chat_info.put(3, last_message.getSenderId().equals(requestSender.getUserId()) ? last_message.getSenderEncryptedMessage() : last_message.getReceiverEncryptedMessage());
+            chat_info.put(2, last_message.getSender().equals(requestSender) ? last_message.getSenderEncryptedAESKey() : last_message.getReceiverEncryptedAESKey());
+            chat_info.put(3, last_message.getSender().equals(requestSender) ? last_message.getSenderEncryptedMessage() : last_message.getReceiverEncryptedMessage());
             chat_list.put(chat.getChatId(), chat_info);
         });
         return chat_list;
@@ -113,7 +113,7 @@ public class ChatsService {
             throw new IllegalArgumentException("Message does not exist in chat");
         }
 
-        if(!requested_message.getSenderId().equals(sender.getUserId())) {
+        if(!requested_message.getSender().equals(sender)) {
             throw new IllegalArgumentException("You are not the owner of this message");
         }
 
@@ -148,10 +148,10 @@ public class ChatsService {
             throw new IllegalArgumentException("Message has been incorrectly formed! Encrypted contents can not be blank!");
         }
 
-        message.setSenderId(sender.getUserId());
+        message.setSender(sender);
         message.setDirectMessageId(null);
         message.setCreatedAt(new Date());
-        message.setChatId(chat.getChatId());
+        message.setChat(chat);
         DirectMessage sent = directMessageRepository.save(message);
 
         Set<DirectMessage> chat_messages = chat.getMessages();
