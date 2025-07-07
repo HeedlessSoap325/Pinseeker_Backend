@@ -1,7 +1,9 @@
 package de.heedlesssoap.pinseekerbackend.exceptions;
 
+import de.heedlesssoap.pinseekerbackend.utils.Constants;
+
 public class InvalidJWTTokenException extends Exception {
     public InvalidJWTTokenException() {
-        super("The provided JWT Token is invalid");
+        super(Constants.INVALID_TOKEN);
     }
 }

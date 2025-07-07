@@ -6,6 +6,7 @@ import de.heedlesssoap.pinseekerbackend.entities.Pin;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidPinException;
 import de.heedlesssoap.pinseekerbackend.repositories.PinRepository;
+import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -51,30 +52,30 @@ public class PinsService {
         }
 
         pinRepository.save(pin);
-        return new ResponseEntity<>("Pin created successfully", HttpStatus.OK);
+        return new ResponseEntity<>(Constants.ACTION_SUCCESSFUL, HttpStatus.OK);
     }
 
-    public PinDTO getPin(String token, Integer pinId) throws InvalidJWTTokenException, AccessDeniedException {
+    public ResponseEntity<PinDTO> getPin(String token, Integer pinId) throws InvalidJWTTokenException, AccessDeniedException {
         Pin pin =  pinRepository.findById(pinId)
-                .orElseThrow(() -> new IllegalArgumentException("Pin does not exist"));
+                .orElseThrow(() -> new IllegalArgumentException(Constants.PIN_NOT_FOUND));
 
         if(pin.getPremium()){
             ApplicationUser sender = tokenService.getSenderFromJWT(token);
             if(!sender.getIsPremium()){
-                throw new AccessDeniedException("The requested Pin is premium-only");
+                throw new AccessDeniedException(Constants.PIN_PREMIUM_ONLY);
             }
         }
-        return new PinDTO().fromPin(pin);
+        return new ResponseEntity<>(new PinDTO().fromPin(pin), HttpStatus.OK);
     }
 
     public ResponseEntity<String> editPin(String token, Integer pinId, PinDTO newPinDTO) throws IllegalArgumentException, InvalidJWTTokenException, AccessDeniedException, InvalidPinException {
         Pin editable_pin = pinRepository.findById(pinId)
-                .orElseThrow(() -> new IllegalArgumentException("Pin does not exist"));
+                .orElseThrow(() -> new IllegalArgumentException(Constants.PIN_NOT_FOUND));
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Pin new_pin = newPinDTO.toPin();
 
         if(!editable_pin.getHider().equals(sender)){
-            throw new AccessDeniedException("You are not the Owner of this Pin");
+            throw new AccessDeniedException(Constants.ACCESS_DENIED);
         } else if (!pinValid(new_pin)) {
             throw new InvalidPinException();
         }
@@ -83,18 +84,18 @@ public class PinsService {
         new_pin.setCreatedAt(editable_pin.getCreatedAt());
         new_pin.setPinId(editable_pin.getPinId());
         pinRepository.save(new_pin);
-        return new ResponseEntity<>("Pin updated successfully", HttpStatus.OK);
+        return new ResponseEntity<>(Constants.ACTION_SUCCESSFUL, HttpStatus.OK);
     }
 
     public ResponseEntity<String> deletePin(String token, Integer pinId) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Pin pin = pinRepository.findById(pinId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException(Constants.PIN_NOT_FOUND));
 
         if(pin.getHider().equals(sender)){
             pinRepository.delete(pin);
-            return new ResponseEntity<>("Pin deleted successfully", HttpStatus.OK);
+            return new ResponseEntity<>(Constants.ACTION_SUCCESSFUL, HttpStatus.OK);
         }
-        throw new AccessDeniedException("You are not the Owner of this Pin");
+        throw new AccessDeniedException(Constants.ACCESS_DENIED);
     }
 }

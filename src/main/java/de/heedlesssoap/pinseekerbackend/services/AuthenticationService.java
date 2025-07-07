@@ -7,6 +7,7 @@ import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsExceptio
 import de.heedlesssoap.pinseekerbackend.repositories.RoleRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
 
+import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -65,7 +66,7 @@ public class AuthenticationService {
             //Therefore, because there was no Exception, the User must exist
             return new LoginResponseDTO(userRepository.findByUsername(username).get().getUsername(), token);
         }catch (AuthenticationException e){
-            throw new UsernameNotFoundException("Username was not found!");
+            throw new UsernameNotFoundException(Constants.USERNAME_NOT_FOUND);
         }
     }
 }

@@ -45,7 +45,7 @@ public class PinsController {
     }
 
     @GetMapping("/{pin_id}")
-    public PinDTO getPinInfo(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id) throws InvalidJWTTokenException, AccessDeniedException {
+    public ResponseEntity<PinDTO> getPinInfo(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id) throws InvalidJWTTokenException, AccessDeniedException {
         return pinsService.getPin(token, pin_id);
     }
 
@@ -58,4 +58,31 @@ public class PinsController {
     public ResponseEntity<String> deletePin(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException{
         return pinsService.deletePin(token, pin_id);
     }
+
+    /**
+     @GetMapping("/{pin_id}/logs")
+     public List<Log> getLogsForPin(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id){
+     return pinsService.getLogs(token, pin_id);
+     }
+
+     @PostMapping("/{pin_id}/logs")
+     public ResponseEntity<String> createLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, Log log){
+     return pinsService.createLog(token, pin_id, log);
+     }
+
+     @PutMapping("/{pin_id}/logs")
+     public ResponseEntity<String> editLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, Log new_log){
+     return pinsService.editLog(token, pin_id, new_log);
+     }
+
+     @DeleteMapping("/{pin_id}/logs")
+     public ResponseEntity<String> deleteLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @RequestHeader("log_id") Integer log_id){
+     return pinsService.deleteLog(token, pin_id, log_id);
+     }
+
+     @GetMapping("/findNearMe")
+     public List<PinDTO> findPinsNearMe(@RequestHeader("Authorization") String token, Location){
+
+     }
+     **/
 }

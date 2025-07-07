@@ -4,6 +4,7 @@ import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
 import de.heedlesssoap.pinseekerbackend.entities.Role;
 import de.heedlesssoap.pinseekerbackend.repositories.RoleRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
+import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,13 +28,15 @@ public class PinSeekerBackendApplication {
 			Role adminRole = roleRepository.save(new Role("ADMIN"));
 			roleRepository.save(new Role("USER"));
 
-			Set<Role> roles = new HashSet<>();
-			roles.add(adminRole);
+			if(Constants.IS_IN_DEVELOPMENT) {
+				Set<Role> admin_user_roles = new HashSet<>();
+				admin_user_roles.add(adminRole);
 
-			//creates a default admin user on startup, this is meant for testing and development only and should be deleted in production
-			ApplicationUser admin = new ApplicationUser("admin", passwordEncode.encode("password"), roles, true);
+				//creates a default admin user on startup, this is meant for testing and development only and should be deleted in production
+				ApplicationUser admin = new ApplicationUser(Constants.DEVELOPMENT_DEFAULT_ADMIN_NAME, passwordEncode.encode(Constants.DEVELOPMENT_DEFAULT_ADMIN_PASSWORD), admin_user_roles, true);
 
-			userRepository.save(admin);
+				userRepository.save(admin);
+			}
 		};
 	}
 }

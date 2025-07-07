@@ -1,7 +1,9 @@
 package de.heedlesssoap.pinseekerbackend.exceptions;
 
+import de.heedlesssoap.pinseekerbackend.utils.Constants;
+
 public class UsernameAlreadyExistsException extends Exception {
     public UsernameAlreadyExistsException(){
-        super("Username already exists");
+        super(Constants.USERNAME_ALREADY_EXISTS);
     }
 }

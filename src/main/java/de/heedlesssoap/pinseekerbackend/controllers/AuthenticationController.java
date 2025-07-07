@@ -21,13 +21,13 @@ public class AuthenticationController {
     }
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<String> handleUsernameAlreadyExists() {
-        return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
+    public ResponseEntity<String> handleUsernameAlreadyExists(UsernameAlreadyExistsException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<String> handleUsernameNotFound() {
-        return new ResponseEntity<>("Bad Credentials!", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> handleUsernameNotFound(UsernameNotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/register")
