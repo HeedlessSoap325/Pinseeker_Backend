@@ -29,30 +29,40 @@ public class DirectMessage {
     @Column(nullable = false)
     private Date created_at;
 
-    @Column(nullable = false)
-    private Integer sender_id;
+    @ManyToOne
+    @JoinTable(
+            name = "user_direct_message_junction",
+            joinColumns = @JoinColumn(name = "direct_message_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private ApplicationUser sender;
 
-    @Column(nullable = false)
-    private Integer chat_id;
+    @ManyToOne
+    @JoinTable(
+            name = "chat_direct_message_junction",
+            joinColumns = @JoinColumn(name = "direct_message_id"),
+            inverseJoinColumns = @JoinColumn(name = "chat_id")
+    )
+    private Chat chat;
 
     public DirectMessage() {
         this.created_at = new Date();
-        this.sender_id = -1;
+        this.sender = new ApplicationUser();
         this.sender_encrypted_message = null;
         this.sender_encrypted_aes_key = null;
         this.receiver_encrypted_message = null;
         this.receiver_encrypted_aes_key = null;
-        this.chat_id = -1;
+        this.chat = new Chat();
     }
 
-    public DirectMessage(String receiver_encrypted_message, String receiver_encrypted_aes_key, String sender_encrypted_message, String sender_encrypted_aes_key, Date created_at, Integer sender_id, Integer chat_id) {
+    public DirectMessage(String receiver_encrypted_message, String receiver_encrypted_aes_key, String sender_encrypted_message, String sender_encrypted_aes_key, Date created_at, ApplicationUser sender, Chat chat) {
         this.receiver_encrypted_message = receiver_encrypted_message;
         this.receiver_encrypted_aes_key = receiver_encrypted_aes_key;
         this.sender_encrypted_message = sender_encrypted_message;
         this.sender_encrypted_aes_key = sender_encrypted_aes_key;
         this.created_at = created_at;
-        this.sender_id = sender_id;
-        this.chat_id = chat_id;
+        this.sender = sender;
+        this.chat = chat;
     }
 
     public Integer getDirectMessageId() {
@@ -103,20 +113,20 @@ public class DirectMessage {
         this.created_at = created_at;
     }
 
-    public Integer getSenderId() {
-        return sender_id;
+    public ApplicationUser getSender() {
+        return sender;
     }
 
-    public void setSenderId(Integer sender_id) {
-        this.sender_id = sender_id;
+    public void setSender(ApplicationUser sender) {
+        this.sender = sender;
     }
 
-    public Integer getChatId() {
-        return chat_id;
+    public Chat getChat() {
+        return chat;
     }
 
-    public void setChatId(Integer chat_id) {
-        this.chat_id = chat_id;
+    public void setChat(Chat chat) {
+        this.chat = chat;
     }
 
     @Override
@@ -128,8 +138,8 @@ public class DirectMessage {
                 ", sender_encrypted_message='" + sender_encrypted_message + '\'' +
                 ", sender_encrypted_aes_key='" + sender_encrypted_aes_key + '\'' +
                 ", created_at=" + created_at +
-                ", sender_id=" + sender_id +
-                ", chat_id=" + chat_id +
+                ", sender=" + sender.toString() +
+                ", chat_id=" + chat.toString() +
                 '}';
     }
 }
