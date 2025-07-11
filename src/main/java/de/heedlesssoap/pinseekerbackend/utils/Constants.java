@@ -28,4 +28,10 @@ public class Constants {
     public static final Boolean IS_IN_DEVELOPMENT = true;
     public static final String DEVELOPMENT_DEFAULT_ADMIN_NAME = "admin";
     public static final String DEVELOPMENT_DEFAULT_ADMIN_PASSWORD = "password";
+
+    public static final String INVALID_FILE_TYPE = "You have tried to upload a non-image File.";
+    public static final String FILE_NOT_DELETED = "The previous Image could not be deleted.";
+    public static final String IMAGES_UPLOAD_DIR = "uploads";
+    public static final String PROFILE_PICTURE_UPLOAD_DIR = "profile_pictures";
+    public static final String LOG_IMAGE_UPLOAD_DIR = "log_images";
 }

@@ -29,6 +29,11 @@ public class Log {
     @Column(nullable = false)
     private Date created_at;
 
+    @Column(nullable = false)
+    private Boolean hasImage;
+
+    private String imageURL;
+
     @ManyToOne
     @JoinTable(
             name = "pin_log_junction",
@@ -39,14 +44,19 @@ public class Log {
 
     public Log() {
         this.created_at = new Date();
+        this.hasImage = false;
+        this.imageURL = null;
     }
 
-    public Log(Integer log_id, LogType type, ApplicationUser logger, String message, Date created_at) {
+    public Log(Integer log_id, LogType type, ApplicationUser logger, String message, Date created_at, Boolean hasImage, String imageURL, Pin parent_pin) {
         this.log_id = log_id;
         this.type = type;
         this.logger = logger;
         this.message = message;
         this.created_at = created_at;
+        this.hasImage = hasImage;
+        this.imageURL = imageURL;
+        this.parent_pin = parent_pin;
     }
 
     public Integer getLogId() {
@@ -95,5 +105,21 @@ public class Log {
 
     public void setParentPin(Pin parent_pin) {
         this.parent_pin = parent_pin;
+    }
+
+    public Boolean getHasImage() {
+        return hasImage;
+    }
+
+    public void setHasImage(Boolean hasImage) {
+        this.hasImage = hasImage;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

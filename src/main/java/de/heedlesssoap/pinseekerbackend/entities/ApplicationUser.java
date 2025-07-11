@@ -22,6 +22,11 @@ public class ApplicationUser implements UserDetails {
     @Column(nullable = false)
     private Boolean isPremium;
 
+    @Column(nullable = false)
+    private Boolean hasProfilePicture;
+
+    private String profilePictureURL;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role_junction",
@@ -34,13 +39,17 @@ public class ApplicationUser implements UserDetails {
         super();
         authorities = new HashSet<>();
         isPremium = false;
+        hasProfilePicture = false;
+        profilePictureURL = null;
     }
 
-    public ApplicationUser(String username, String password, Set<Role> authorities, Boolean isPremium) {
+    public ApplicationUser(String username, String password, Boolean isPremium, Boolean hasProfilePicture, String profilePictureURL, Set<Role> authorities) {
         this.username = username;
         this.password = password;
-        this.authorities = authorities;
         this.isPremium = isPremium;
+        this.hasProfilePicture = hasProfilePicture;
+        this.profilePictureURL = profilePictureURL;
+        this.authorities = authorities;
     }
 
     public Integer getUserId() {
@@ -84,6 +93,22 @@ public class ApplicationUser implements UserDetails {
 
     public void setAuthorities(Set<Role> authorities) {
         this.authorities = authorities;
+    }
+
+    public Boolean getHasProfilePicture() {
+        return hasProfilePicture;
+    }
+
+    public void setHasProfilePicture(Boolean hasProfilePicture) {
+        this.hasProfilePicture = hasProfilePicture;
+    }
+
+    public String getProfilePictureURL() {
+        return profilePictureURL;
+    }
+
+    public void setProfilePictureURL(String profilePictureURL) {
+        this.profilePictureURL = profilePictureURL;
     }
 
     @Override

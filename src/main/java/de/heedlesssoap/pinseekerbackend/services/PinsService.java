@@ -15,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,11 +29,13 @@ public class PinsService {
     final PinRepository pinRepository;
     final TokenService tokenService;
     final LogRepository logRepository;
+    final ImageService imageService;
 
-    public PinsService(PinRepository pinRepository, TokenService tokenService, LogRepository logRepository) {
+    public PinsService(PinRepository pinRepository, TokenService tokenService, LogRepository logRepository, ImageService imageService) {
         this.pinRepository = pinRepository;
         this.tokenService = tokenService;
         this.logRepository = logRepository;
+        this.imageService = imageService;
     }
 
     private boolean pinValid(Pin pin){
@@ -172,7 +176,7 @@ public class PinsService {
         return new ResponseEntity<>(Constants.ACTION_SUCCESSFUL, HttpStatus.OK);
     }
 
-    public ResponseEntity<String> deleteLog(String token, Integer pinId, Integer logId) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException {
+    public ResponseEntity<String> deleteLog(String token, Integer pinId, Integer logId) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException, IOException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         Pin parent_pin = getCheckedPin(pinId);
         Log log = getCheckedLog(logId);
@@ -186,7 +190,43 @@ public class PinsService {
         parent_pin.getLogs().remove(log);
         pinRepository.save(parent_pin);
 
+        if(log.getHasImage()){
+            imageService.deleteLogImage(log);
+        }
+
         logRepository.delete(log);
+        return new ResponseEntity<>(Constants.ACTION_SUCCESSFUL, HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> updateImage(String token, Integer pin_id, Integer log_id, MultipartFile image) throws InvalidJWTTokenException, IOException {
+        ApplicationUser sender = tokenService.getSenderFromJWT(token);
+        Pin parent_pin = getCheckedPin(pin_id);
+        Log log = getCheckedLog(log_id);
+
+        if(!log.getParentPin().equals(parent_pin)){
+            throw new AccessDeniedException(Constants.ACCESS_DENIED);
+        }else if (!log.getLogger().equals(sender)){
+            throw new AccessDeniedException(Constants.ACCESS_DENIED);
+        }
+
+        imageService.updateLogImage(image, log);
+
+        return new ResponseEntity<>(Constants.ACTION_SUCCESSFUL, HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> deleteImage(String token, Integer pin_id, Integer log_id) throws InvalidJWTTokenException, IOException {
+        ApplicationUser sender = tokenService.getSenderFromJWT(token);
+        Pin parent_pin = getCheckedPin(pin_id);
+        Log log = getCheckedLog(log_id);
+
+        if(!log.getParentPin().equals(parent_pin)){
+            throw new AccessDeniedException(Constants.ACCESS_DENIED);
+        }else if (!log.getLogger().equals(sender)){
+            throw new AccessDeniedException(Constants.ACCESS_DENIED);
+        }
+
+        imageService.deleteLogImage(log);
+
         return new ResponseEntity<>(Constants.ACTION_SUCCESSFUL, HttpStatus.OK);
     }
 }
