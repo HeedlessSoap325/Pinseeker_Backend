@@ -4,12 +4,16 @@ import de.heedlesssoap.pinseekerbackend.exceptions.ChatAlreadyExistsException;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidPinException;
 import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsException;
+import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -47,5 +51,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<String> handleIOException(IOException exception){
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(FileAlreadyExistsException.class)
+    public ResponseEntity<String> handleFileAlreadyExistsException(FileAlreadyExistsException exception){
+        return new ResponseEntity<>(Constants.FILE_ALREADY_EXISTS, HttpStatus.CONFLICT);
     }
 }
