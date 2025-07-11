@@ -17,15 +17,21 @@ public class LogDTO {
 
     private String created_at;
 
+    private Boolean has_image;
+
+    private String imageURL;
+
     public LogDTO() {
     }
 
-    public LogDTO(Integer log_id, LogType type, ApplicationUserDTO logger, String message, String created_at) {
+    public LogDTO(Integer log_id, LogType type, ApplicationUserDTO logger, String message, String created_at, Boolean has_image, String imageURL) {
         this.log_id = log_id;
         this.type = type;
         this.logger = logger;
         this.message = message;
         this.created_at = created_at;
+        this.has_image = has_image;
+        this.imageURL = imageURL;
     }
 
     public Integer getLogId() {
@@ -68,12 +74,30 @@ public class LogDTO {
         this.created_at = created_at;
     }
 
+    public Boolean getHas_image() {
+        return has_image;
+    }
+
+    public void setHas_image(Boolean has_image) {
+        this.has_image = has_image;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
     public LogDTO fromLog(Log log){
         this.log_id = log.getLogId();
         this.type = log.getType();
         this.logger = new ApplicationUserDTO().fromApplicationUser(log.getLogger());
         this.message = log.getMessage();
         this.created_at = DateUtils.formatDate(log.getCreatedAt());
+        this.has_image = log.getHasImage();
+        this.imageURL = log.getHasImage() ? log.getImageURL() : null;
         return this;
     }
 
@@ -83,6 +107,8 @@ public class LogDTO {
         log.setType(this.type);
         log.setMessage(this.message);
         log.setCreatedAt(new Date());
+        log.setHasImage(this.has_image);
+        log.setImageURL(this.has_image ? this.imageURL : null);
         return log;
     }
 }

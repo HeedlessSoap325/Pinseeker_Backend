@@ -131,6 +131,8 @@ public class PinsService {
         log.setLogId(null);
         log.setLogger(sender);
         log.setParentPin(parent_pin);
+        log.setHasImage(false);
+        log.setImageURL(null);
 
         Log created_log = logRepository.save(log);
         parent_pin.getLogs().add(created_log);
@@ -171,6 +173,8 @@ public class PinsService {
         new_log.setLogger(sender);
         new_log.setCreatedAt(editable_log.getCreatedAt());
         new_log.setParentPin(parent_pin);
+        new_log.setHasImage(editable_log.getHasImage());
+        new_log.setImageURL(editable_log.getImageURL());
 
         logRepository.save(new_log);
         return new ResponseEntity<>(Constants.ACTION_SUCCESSFUL, HttpStatus.OK);
