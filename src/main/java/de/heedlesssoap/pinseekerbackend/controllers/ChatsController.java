@@ -6,7 +6,6 @@ import de.heedlesssoap.pinseekerbackend.entities.enums.ChatState;
 import de.heedlesssoap.pinseekerbackend.exceptions.ChatAlreadyExistsException;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.services.ChatsService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,31 +22,6 @@ public class ChatsController {
 
     public ChatsController(ChatsService chatsService) {
         this.chatsService = chatsService;
-    }
-
-    @ExceptionHandler(InvalidJWTTokenException.class)
-    public ResponseEntity<String> handleInvalideJWTTokenException(InvalidJWTTokenException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(ChatAlreadyExistsException.class)
-    public ResponseEntity<String> handleChatAlreadyExistsException(ChatAlreadyExistsException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @PostMapping("/")

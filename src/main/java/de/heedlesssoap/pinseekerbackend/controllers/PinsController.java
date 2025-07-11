@@ -5,7 +5,6 @@ import de.heedlesssoap.pinseekerbackend.entities.DTOs.PinDTO;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidPinException;
 import de.heedlesssoap.pinseekerbackend.services.PinsService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
@@ -22,26 +21,6 @@ public class PinsController {
 
     public PinsController(PinsService pinsService) {
         this.pinsService = pinsService;
-    }
-
-    @ExceptionHandler(InvalidJWTTokenException.class)
-    public ResponseEntity<String> handleInvalideJWTTokenException(InvalidJWTTokenException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(InvalidPinException.class)
-    public ResponseEntity<String> handleInvalidPinException(InvalidPinException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/")
