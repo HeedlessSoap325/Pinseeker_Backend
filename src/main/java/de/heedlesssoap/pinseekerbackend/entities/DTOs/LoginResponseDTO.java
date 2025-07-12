@@ -1,24 +1,24 @@
 package de.heedlesssoap.pinseekerbackend.entities.DTOs;
 
 public class LoginResponseDTO {
-    private String username;
+    private BasicApplicationUserDTO user;
     private String jwt;
 
     public LoginResponseDTO(){
         super();
     }
 
-    public LoginResponseDTO(String username, String jwt){
-        this.username = username;
+    public LoginResponseDTO(BasicApplicationUserDTO user, String jwt){
+        this.user = user;
         this.jwt = jwt;
     }
 
-    public String getUsername(){
-        return this.username;
+    public BasicApplicationUserDTO getUsername(){
+        return this.user;
     }
 
-    public void setUser(String username){
-        this.username = username;
+    public void setUser(BasicApplicationUserDTO user){
+        this.user = user;
     }
 
     public String getJwt(){

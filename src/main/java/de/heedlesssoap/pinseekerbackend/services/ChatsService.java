@@ -2,9 +2,7 @@ package de.heedlesssoap.pinseekerbackend.services;
 
 import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
 import de.heedlesssoap.pinseekerbackend.entities.Chat;
-import de.heedlesssoap.pinseekerbackend.entities.DTOs.ApplicationUserDTO;
-import de.heedlesssoap.pinseekerbackend.entities.DTOs.DirectMessageDTO;
-import de.heedlesssoap.pinseekerbackend.entities.DTOs.GetChatDTO;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.*;
 import de.heedlesssoap.pinseekerbackend.entities.DirectMessage;
 import de.heedlesssoap.pinseekerbackend.entities.enums.ChatState;
 import de.heedlesssoap.pinseekerbackend.exceptions.ChatAlreadyExistsException;
@@ -49,13 +47,13 @@ public class ChatsService {
         ApplicationUser otherUser = chat.getParticipants().stream()
                 .filter(user -> !user.getUserId().equals(requestSender.getUserId()))
                 .findFirst().get();
-        ApplicationUserDTO otherUserDTO = new ApplicationUserDTO().fromApplicationUser(otherUser);
+        ChatApplicationUserDTO otherUserDTO = new ChatApplicationUserDTO().fromApplicationUser(otherUser);
 
         Set<DirectMessageDTO> messageDTOs = chat.getMessages().stream()
                 .map(message -> {
                     DirectMessageDTO directMessageDTO = new DirectMessageDTO();
                     directMessageDTO.setDirectMessageId(message.getDirectMessageId());
-                    directMessageDTO.setSender(new ApplicationUserDTO().fromApplicationUser(message.getSender()));
+                    directMessageDTO.setSender(new BasicApplicationUserDTO().fromApplicationUser(message.getSender(), null));
                     directMessageDTO.setCreatedAt(message.getCreatedAt());
 
                     if (message.getSender().equals(requestSender)) {

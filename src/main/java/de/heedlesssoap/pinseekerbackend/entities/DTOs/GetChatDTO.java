@@ -7,7 +7,7 @@ import java.util.Set;
 public class GetChatDTO {
     private Integer chat_id;
 
-    private ApplicationUserDTO participant;
+    private ChatApplicationUserDTO participant;
 
     private Set<DirectMessageDTO> messages;
 
@@ -16,7 +16,7 @@ public class GetChatDTO {
     public GetChatDTO() {
     }
 
-    public GetChatDTO(Integer chat_id, ApplicationUserDTO participant, Set<DirectMessageDTO> messages, ChatState chat_state) {
+    public GetChatDTO(Integer chat_id, ChatApplicationUserDTO participant, Set<DirectMessageDTO> messages, ChatState chat_state) {
         this.chat_id = chat_id;
         this.participant = participant;
         this.messages = messages;
@@ -31,11 +31,11 @@ public class GetChatDTO {
         this.chat_id = chat_id;
     }
 
-    public ApplicationUserDTO getParticipant() {
+    public ChatApplicationUserDTO getParticipant() {
         return participant;
     }
 
-    public void setParticipant(ApplicationUserDTO participant) {
+    public void setParticipant(ChatApplicationUserDTO participant) {
         this.participant = participant;
     }
 

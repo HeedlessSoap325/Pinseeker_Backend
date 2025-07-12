@@ -12,12 +12,12 @@ public class DirectMessageDTO {
 
     private Date created_at;
 
-    private ApplicationUserDTO sender;
+    private BasicApplicationUserDTO sender;
 
     public DirectMessageDTO() {
     }
 
-    public DirectMessageDTO(Integer direct_message_id, String encrypted_message, String encrypted_aes_key, Date created_at, ApplicationUserDTO sender) {
+    public DirectMessageDTO(Integer direct_message_id, String encrypted_message, String encrypted_aes_key, Date created_at, BasicApplicationUserDTO sender) {
         this.direct_message_id = direct_message_id;
         this.encrypted_message = encrypted_message;
         this.encrypted_aes_key = encrypted_aes_key;
@@ -57,11 +57,11 @@ public class DirectMessageDTO {
         this.created_at = created_at;
     }
 
-    public ApplicationUserDTO getSender() {
+    public BasicApplicationUserDTO getSender() {
         return sender;
     }
 
-    public void setSender(ApplicationUserDTO sender) {
+    public void setSender(BasicApplicationUserDTO sender) {
         this.sender = sender;
     }
 }

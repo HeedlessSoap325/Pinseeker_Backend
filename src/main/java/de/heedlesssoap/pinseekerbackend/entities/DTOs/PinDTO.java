@@ -1,15 +1,11 @@
 package de.heedlesssoap.pinseekerbackend.entities.DTOs;
 
-import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
-import de.heedlesssoap.pinseekerbackend.entities.Log;
 import de.heedlesssoap.pinseekerbackend.entities.Pin;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinSize;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinType;
 import de.heedlesssoap.pinseekerbackend.utils.DateUtils;
-import jakarta.persistence.*;
 
 import java.util.Date;
-import java.util.Set;
 
 public class PinDTO {
     private Integer pin_id;
@@ -30,7 +26,7 @@ public class PinDTO {
 
     private PinSize size;
 
-    private ApplicationUserDTO hider;
+    private BasicApplicationUserDTO hider;
 
     private String created_at;
 
@@ -42,7 +38,7 @@ public class PinDTO {
         super();
     }
 
-    public PinDTO(Integer pin_id, double latitude, double longitude, String name, PinType type, Boolean premium, Float difficulty, PinSize size, Float terrain, String created_at, ApplicationUserDTO hider, String hint, String description) {
+    public PinDTO(Integer pin_id, double latitude, double longitude, String name, PinType type, Boolean premium, Float difficulty, PinSize size, Float terrain, String created_at, BasicApplicationUserDTO hider, String hint, String description) {
         this.pin_id = pin_id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -98,7 +94,7 @@ public class PinDTO {
         this.created_at = created_at;
     }
 
-    public void setHider(ApplicationUserDTO hider) {
+    public void setHider(BasicApplicationUserDTO hider) {
         this.hider = hider;
     }
 
@@ -146,7 +142,7 @@ public class PinDTO {
         return size;
     }
 
-    public ApplicationUserDTO getHider() {
+    public BasicApplicationUserDTO getHider() {
         return hider;
     }
 
@@ -172,7 +168,7 @@ public class PinDTO {
         this.difficulty = pin.getDifficulty();
         this.terrain = pin.getTerrain();
         this.size = pin.getSize();
-        this.hider = new ApplicationUserDTO().fromApplicationUser(pin.getHider());
+        this.hider = new BasicApplicationUserDTO().fromApplicationUser(pin.getHider(), null);
         this.created_at = DateUtils.formatDate(pin.getCreatedAt());
         this.hint = pin.getHint();
         this.description = pin.getDescription();

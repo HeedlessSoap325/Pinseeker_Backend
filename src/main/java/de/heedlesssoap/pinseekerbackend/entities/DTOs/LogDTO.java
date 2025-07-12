@@ -11,7 +11,7 @@ public class LogDTO {
 
     private LogType type;
 
-    private ApplicationUserDTO logger;
+    private BasicApplicationUserDTO logger;
 
     private String message;
 
@@ -24,7 +24,7 @@ public class LogDTO {
     public LogDTO() {
     }
 
-    public LogDTO(Integer log_id, LogType type, ApplicationUserDTO logger, String message, String created_at, Boolean has_image, String imageURL) {
+    public LogDTO(Integer log_id, LogType type, BasicApplicationUserDTO logger, String message, String created_at, Boolean has_image, String imageURL) {
         this.log_id = log_id;
         this.type = type;
         this.logger = logger;
@@ -50,11 +50,11 @@ public class LogDTO {
         this.type = type;
     }
 
-    public ApplicationUserDTO getLogger() {
+    public BasicApplicationUserDTO getLogger() {
         return logger;
     }
 
-    public void setLogger(ApplicationUserDTO logger) {
+    public void setLogger(BasicApplicationUserDTO logger) {
         this.logger = logger;
     }
 
@@ -93,7 +93,7 @@ public class LogDTO {
     public LogDTO fromLog(Log log){
         this.log_id = log.getLogId();
         this.type = log.getType();
-        this.logger = new ApplicationUserDTO().fromApplicationUser(log.getLogger());
+        this.logger = new BasicApplicationUserDTO().fromApplicationUser(log.getLogger(), null);
         this.message = log.getMessage();
         this.created_at = DateUtils.formatDate(log.getCreatedAt());
         this.has_image = log.getHasImage();

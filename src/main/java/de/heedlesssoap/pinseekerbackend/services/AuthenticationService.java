@@ -1,9 +1,12 @@
 package de.heedlesssoap.pinseekerbackend.services;
 
 import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.BasicApplicationUserDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.LoginResponseDTO;
 import de.heedlesssoap.pinseekerbackend.entities.Role;
+import de.heedlesssoap.pinseekerbackend.entities.enums.LogType;
 import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsException;
+import de.heedlesssoap.pinseekerbackend.repositories.LogRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.RoleRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
 
@@ -24,13 +27,15 @@ import java.util.Set;
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final LogRepository logRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
-    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenService tokenService) {
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, LogRepository logRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenService tokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.logRepository = logRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
@@ -66,6 +71,8 @@ public class AuthenticationService {
 
         //This is okay, because the authenticationManager would throw an exception if the User wouldn't exist
         //Therefore, because there was no Exception, the User must exist
-        return new LoginResponseDTO(userRepository.findByUsername(username).get().getUsername(), token);
+        ApplicationUser user = userRepository.findByUsername(username).get();
+        BasicApplicationUserDTO dto = new BasicApplicationUserDTO().fromApplicationUser(user, logRepository.getNumberOfPinsByLoggerAndType(user, LogType.FOUND));
+        return new LoginResponseDTO(dto, token);
     }
 }
