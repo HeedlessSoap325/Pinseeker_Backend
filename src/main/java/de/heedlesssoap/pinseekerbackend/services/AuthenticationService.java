@@ -9,7 +9,6 @@ import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsExceptio
 import de.heedlesssoap.pinseekerbackend.repositories.LogRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.RoleRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

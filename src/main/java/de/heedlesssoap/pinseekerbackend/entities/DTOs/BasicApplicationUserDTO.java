@@ -1,8 +1,6 @@
 package de.heedlesssoap.pinseekerbackend.entities.DTOs;
 
 import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
-import de.heedlesssoap.pinseekerbackend.entities.enums.LogType;
-import de.heedlesssoap.pinseekerbackend.repositories.LogRepository;
 
 public class BasicApplicationUserDTO {
     private Integer user_id;

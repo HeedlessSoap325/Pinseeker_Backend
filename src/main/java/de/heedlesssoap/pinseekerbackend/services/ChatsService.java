@@ -2,7 +2,10 @@ package de.heedlesssoap.pinseekerbackend.services;
 
 import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
 import de.heedlesssoap.pinseekerbackend.entities.Chat;
-import de.heedlesssoap.pinseekerbackend.entities.DTOs.*;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.BasicApplicationUserDTO;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.ChatApplicationUserDTO;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.DirectMessageDTO;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.GetChatDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DirectMessage;
 import de.heedlesssoap.pinseekerbackend.entities.enums.ChatState;
 import de.heedlesssoap.pinseekerbackend.exceptions.ChatAlreadyExistsException;
@@ -20,7 +23,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
