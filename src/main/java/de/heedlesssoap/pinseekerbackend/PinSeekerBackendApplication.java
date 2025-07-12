@@ -38,6 +38,7 @@ public class PinSeekerBackendApplication {
 				admin.setPassword(passwordEncode.encode(Constants.DEVELOPMENT_DEFAULT_ADMIN_PASSWORD));
 				admin.setAuthorities(admin_user_roles);
 				admin.setIsPremium(true);
+				admin.setIsEnabled(true);
 
 				userRepository.save(admin);
 			}

@@ -50,7 +50,7 @@ public class ImageService {
 
         Path profile_picture_dir = Paths.get(Constants.PROFILE_PICTURE_UPLOAD_DIR);
         if(user.getHasProfilePicture()){
-            safeDeleteImage(profile_picture_dir, user.getProfilePictureURL());
+            safeDeleteImage(profile_picture_dir, user.getProfilePicture());
         }
 
         String originalFilename = profilePicture.getOriginalFilename();
@@ -60,7 +60,7 @@ public class ImageService {
         saveImage(profile_picture_dir, filename, profilePicture);
 
         user.setHasProfilePicture(true);
-        user.setProfilePictureURL(filename);
+        user.setProfilePicture(filename);
 
         userRepository.save(user);
     }
@@ -84,10 +84,10 @@ public class ImageService {
 
     public void deleteProfilePicture(ApplicationUser user) throws IOException {
         Path profile_picture_dir = Paths.get(Constants.PROFILE_PICTURE_UPLOAD_DIR);
-        safeDeleteImage(profile_picture_dir, user.getProfilePictureURL());
+        safeDeleteImage(profile_picture_dir, user.getProfilePicture());
 
         user.setHasProfilePicture(false);
-        user.setProfilePictureURL(null);
+        user.setProfilePicture(null);
 
         userRepository.save(user);
     }
