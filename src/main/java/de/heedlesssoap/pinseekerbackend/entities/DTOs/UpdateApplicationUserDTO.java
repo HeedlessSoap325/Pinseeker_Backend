@@ -7,6 +7,8 @@ public class UpdateApplicationUserDTO {
 
     private String username;
 
+    private String password;
+
     private String profile_location;
 
     private String email;
@@ -21,9 +23,10 @@ public class UpdateApplicationUserDTO {
         super();
     }
 
-    public UpdateApplicationUserDTO(Integer user_id, String username, String profile_location, String email, String about, Boolean is_profile_private, String public_rsa_key) {
+    public UpdateApplicationUserDTO(Integer user_id, String username, String password, String profile_location, String email, String about, Boolean is_profile_private, String public_rsa_key) {
         this.user_id = user_id;
         this.username = username;
+        this.password = password;
         this.profile_location = profile_location;
         this.email = email;
         this.about = about;
@@ -45,6 +48,14 @@ public class UpdateApplicationUserDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getProfileLocation() {
@@ -91,6 +102,7 @@ public class UpdateApplicationUserDTO {
         ApplicationUser applicationUser = new ApplicationUser();
         applicationUser.setUserId(this.user_id);
         applicationUser.setUsername(this.username);
+        applicationUser.setPassword(this.password);
         applicationUser.setProfileLocation(this.profile_location);
         applicationUser.setEmail(this.email);
         applicationUser.setAbout(this.about);
