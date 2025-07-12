@@ -164,6 +164,9 @@ public class ChatsService {
 
     public ResponseEntity<String> openChat(String token, Integer targetUserId) throws InvalidJWTTokenException, UsernameNotFoundException, ChatAlreadyExistsException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
+        if(sender.getUserId().equals(targetUserId)) {
+            throw new IllegalArgumentException(Constants.NOT_ALLOWED);
+        }
         ApplicationUser target_user = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new UsernameNotFoundException(Constants.USERNAME_NOT_FOUND));
 

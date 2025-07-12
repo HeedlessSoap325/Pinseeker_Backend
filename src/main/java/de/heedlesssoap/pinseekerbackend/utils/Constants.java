@@ -20,6 +20,7 @@ public class Constants {
 
     public static final String ACTION_SUCCESSFUL = "Action was performed successfully.";
     public static final String ACCESS_DENIED = "You are not authorized to perform this action.";
+    public static final String NOT_ALLOWED = "The action you tried to perform is not allowed.";
 
     public static final String PIN_NOT_FOUND = "This Pin does not exist.";
     public static final String PIN_ALREADY_EXISTS = "This Pin already exists.";
