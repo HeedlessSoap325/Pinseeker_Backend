@@ -8,10 +8,13 @@ import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.security.auth.login.CredentialException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 
@@ -26,6 +29,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<String> handleDisabledException() {
+        return new ResponseEntity<>(Constants.USER_NOT_ENABLED, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> handleCredentialException() {
+        return new ResponseEntity<>(Constants.BAD_CREDENTIALS, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidJWTTokenException.class)
@@ -59,7 +72,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(FileAlreadyExistsException.class)
-    public ResponseEntity<String> handleFileAlreadyExistsException(FileAlreadyExistsException exception){
+    public ResponseEntity<String> handleFileAlreadyExistsException(){
         return new ResponseEntity<>(Constants.FILE_ALREADY_EXISTS, HttpStatus.CONFLICT);
     }
 }

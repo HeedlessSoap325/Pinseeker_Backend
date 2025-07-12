@@ -7,12 +7,10 @@ import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsExceptio
 import de.heedlesssoap.pinseekerbackend.repositories.RoleRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
 
-import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,19 +57,15 @@ public class AuthenticationService {
         return userRepository.save(user).getUsername();
     }
 
-    public LoginResponseDTO loginUser(String username, String password) {
-        try{
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
-            );
+    public LoginResponseDTO loginUser(String username, String password) throws AuthenticationException {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+        );
 
-            String token = tokenService.generateJwt(authentication.getName(), (Collection<Role>) authentication.getAuthorities());
+        String token = tokenService.generateJwt(authentication.getName(), (Collection<Role>) authentication.getAuthorities());
 
-            //This is okay, because the authenticationManager would throw an exception if the User wouldn't exist
-            //Therefore, because there was no Exception, the User must exist
-            return new LoginResponseDTO(userRepository.findByUsername(username).get().getUsername(), token);
-        }catch (AuthenticationException e){
-            throw new UsernameNotFoundException(Constants.USERNAME_NOT_FOUND);
-        }
+        //This is okay, because the authenticationManager would throw an exception if the User wouldn't exist
+        //Therefore, because there was no Exception, the User must exist
+        return new LoginResponseDTO(userRepository.findByUsername(username).get().getUsername(), token);
     }
 }
