@@ -5,6 +5,7 @@ public class Constants {
     public static final String USERNAME_NOT_FOUND = "There is no user with this name.";
     public static final String USER_NOT_ENABLED = "This user has not been enabled. Please finish setting up your account before logging in again.";
     public static final String BAD_CREDENTIALS = "Bad credentials";
+    public static final String NO_RSA_KEY = "Your Client has not provided a public RSA Key. Please try again.";
 
     public static final String CHAT_ALREADY_EXISTS = "This Chat already exists.";
     public static final String USER_HAS_NO_CHATS = "You have no chats.";
