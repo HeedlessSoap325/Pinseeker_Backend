@@ -14,10 +14,6 @@ public class DirectMessageDTO {
 
     private Date created_at;
 
-    /** TODO
-     *   Maybe replace with Boolean like was_sender_other_user, as it is only used to send data, not receive data
-     *   Would prevent multiple Data to be sent, that is unnecessary, as the GetChatDTO already caries User info
-    **/
     private Boolean was_sender_other_user;
 
     public DirectMessageDTO() {
