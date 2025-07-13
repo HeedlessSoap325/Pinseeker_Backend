@@ -36,6 +36,9 @@ public class ImageService {
     }
 
     private void safeDeleteImage(Path base_path, String imageURL) throws IOException {
+        if(imageURL == null){
+            throw new IOException(Constants.IMAGE_DID_NOT_EXIST);
+        }
         boolean success = Files.deleteIfExists(this.uploadPath.resolve(base_path).resolve(imageURL));
         if(!success){
             throw new IllegalArgumentException(Constants.FILE_NOT_DELETED);

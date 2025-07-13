@@ -183,7 +183,7 @@ public class ExtendedApplicationUserDTO {
             this.found_pins = null;
             this.hidden_pins = null;
         }else{
-            this.profile_location = applicationUser.getProfilePicture();
+            this.profile_location = applicationUser.getProfileLocation();
             this.email = applicationUser.getEmail();
             this.about = applicationUser.getAbout();
             this.number_of_finds = logRepository.getNumberOfPinsByLoggerAndType(applicationUser, LogType.FOUND);

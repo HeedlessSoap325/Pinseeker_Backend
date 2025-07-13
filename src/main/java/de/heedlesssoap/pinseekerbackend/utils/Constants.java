@@ -35,6 +35,7 @@ public class Constants {
 
     public static final String INVALID_FILE_TYPE = "You have tried to upload a non-image File.";
     public static final String FILE_NOT_DELETED = "The previous Image could not be deleted.";
+    public static final String IMAGE_DID_NOT_EXIST = "There is no image to delete.";
     public static final String FILE_ALREADY_EXISTS = "Image could not be saved, because it already exists. Please Try again.";
     public static final String IMAGES_UPLOAD_DIR = "uploads";
     public static final String PROFILE_PICTURE_UPLOAD_DIR = "profile_pictures";

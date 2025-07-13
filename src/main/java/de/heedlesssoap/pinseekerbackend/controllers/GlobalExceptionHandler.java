@@ -7,10 +7,12 @@ import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsExceptio
 import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -74,5 +76,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FileAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleFileAlreadyExistsException(){
         return new ResponseEntity<>(Map.of("error", Constants.FILE_ALREADY_EXISTS), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<Map<String, String>> handleMissingRequestHeaderException(MissingRequestHeaderException exception){
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception){
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

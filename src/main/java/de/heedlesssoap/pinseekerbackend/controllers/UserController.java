@@ -2,11 +2,15 @@ package de.heedlesssoap.pinseekerbackend.controllers;
 
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.ExtendedApplicationUserDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.UpdateApplicationUserDTO;
+import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
+import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsException;
 import de.heedlesssoap.pinseekerbackend.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -25,27 +29,22 @@ public class UserController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<String> updateUser(@RequestHeader("Authorization") String token, @RequestHeader("password") String password, @RequestBody UpdateApplicationUserDTO updateApplicationUserDTO){
+    public ResponseEntity<Map<String, String>> updateUser(@RequestHeader("Authorization") String token, @RequestHeader("password") String password, @RequestBody UpdateApplicationUserDTO updateApplicationUserDTO) throws InvalidJWTTokenException, AccessDeniedException, UsernameAlreadyExistsException {
         return userService.updateUser(token, password, updateApplicationUserDTO);
     }
 
     @PutMapping("/picture")
-    public ResponseEntity<String> updateUserProfilePicture(@RequestHeader("Authorization") String token, @RequestParam(value = "image") MultipartFile image){
+    public ResponseEntity<Map<String, String>> updateUserProfilePicture(@RequestHeader("Authorization") String token, @RequestParam(value = "image") MultipartFile image) throws InvalidJWTTokenException, IOException {
         return userService.updatePicture(token, image);
     }
 
     @DeleteMapping("/picture")
-    public ResponseEntity<String> deleteUserProfilePicture(@RequestHeader("Authorization") String token){
+    public ResponseEntity<Map<String, String>> deleteUserProfilePicture(@RequestHeader("Authorization") String token) throws InvalidJWTTokenException, IOException{
         return userService.deletePicture(token);
     }
 
     @GetMapping("/{user_id}")
     public ResponseEntity<ExtendedApplicationUserDTO> getUser(@PathVariable("user_id") Integer user_id){
         return userService.getUser(user_id);
-    }
-
-    @DeleteMapping("/")
-    public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String token, @RequestBody String password){
-        return userService.deleteUser(token, password);
     }
 }
