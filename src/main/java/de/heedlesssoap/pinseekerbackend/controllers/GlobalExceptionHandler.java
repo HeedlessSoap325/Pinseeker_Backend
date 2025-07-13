@@ -16,62 +16,63 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<String> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+    public ResponseEntity<Map<String, String>> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException exception) {
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Map<String, String>> handleUsernameNotFoundException(UsernameNotFoundException exception) {
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<String> handleDisabledException() {
-        return new ResponseEntity<>(Constants.USER_NOT_ENABLED, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Map<String, String>> handleDisabledException() {
+        return new ResponseEntity<>(Map.of("error", Constants.USER_NOT_ENABLED), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<String> handleCredentialException() {
-        return new ResponseEntity<>(Constants.BAD_CREDENTIALS, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Map<String, String>> handleCredentialException() {
+        return new ResponseEntity<>(Map.of("error", Constants.BAD_CREDENTIALS), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidJWTTokenException.class)
-    public ResponseEntity<String> handleInvalideJWTTokenException(InvalidJWTTokenException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Map<String, String>> handleInvalideJWTTokenException(InvalidJWTTokenException exception){
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException exception){
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ChatAlreadyExistsException.class)
-    public ResponseEntity<String> handleChatAlreadyExistsException(ChatAlreadyExistsException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+    public ResponseEntity<Map<String, String>> handleChatAlreadyExistsException(ChatAlreadyExistsException exception){
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InvalidPinException.class)
-    public ResponseEntity<String> handleInvalidPinException(InvalidPinException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Map<String, String>> handleInvalidPinException(InvalidPinException exception){
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
+    public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException exception){
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(IOException.class)
-    public ResponseEntity<String> handleIOException(IOException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Map<String, String>> handleIOException(IOException exception){
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(FileAlreadyExistsException.class)
-    public ResponseEntity<String> handleFileAlreadyExistsException(){
-        return new ResponseEntity<>(Constants.FILE_ALREADY_EXISTS, HttpStatus.CONFLICT);
+    public ResponseEntity<Map<String, String>> handleFileAlreadyExistsException(){
+        return new ResponseEntity<>(Map.of("error", Constants.FILE_ALREADY_EXISTS), HttpStatus.CONFLICT);
     }
 }

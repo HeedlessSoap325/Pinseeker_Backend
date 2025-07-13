@@ -64,10 +64,10 @@ public class ChatsService {
 
                     if (message.getSender().equals(requestSender)) {
                         directMessageDTO.setEncryptedMessage(message.getSenderEncryptedMessage());
-                        directMessageDTO.setEncryptedAESKey(message.getSenderEncryptedAESKey());
+                        directMessageDTO.setEncryptedAesKey(message.getSenderEncryptedAESKey());
                     }else{
                         directMessageDTO.setEncryptedMessage(message.getReceiverEncryptedMessage());
-                        directMessageDTO.setEncryptedAESKey(message.getReceiverEncryptedAESKey());
+                        directMessageDTO.setEncryptedAesKey(message.getReceiverEncryptedAESKey());
                     }
                     return directMessageDTO;
                 }).collect(Collectors.toSet());

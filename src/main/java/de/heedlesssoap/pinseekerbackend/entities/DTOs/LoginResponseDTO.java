@@ -2,6 +2,7 @@ package de.heedlesssoap.pinseekerbackend.entities.DTOs;
 
 public class LoginResponseDTO {
     private BasicApplicationUserDTO user;
+
     private String jwt;
 
     public LoginResponseDTO(){
@@ -13,7 +14,7 @@ public class LoginResponseDTO {
         this.jwt = jwt;
     }
 
-    public BasicApplicationUserDTO getUsername(){
+    public BasicApplicationUserDTO getUser(){
         return this.user;
     }
 

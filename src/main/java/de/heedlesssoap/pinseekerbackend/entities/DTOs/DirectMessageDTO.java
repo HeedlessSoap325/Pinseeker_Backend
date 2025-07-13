@@ -41,11 +41,11 @@ public class DirectMessageDTO {
         this.direct_message_id = direct_message_id;
     }
 
-    public String getEncryptedAESKey() {
+    public String getEncryptedAesKey() {
         return encrypted_aes_key;
     }
 
-    public void setEncryptedAESKey(String encrypted_aes_key) {
+    public void setEncryptedAesKey(String encrypted_aes_key) {
         this.encrypted_aes_key = encrypted_aes_key;
     }
 

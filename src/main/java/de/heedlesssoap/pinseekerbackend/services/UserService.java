@@ -3,8 +3,10 @@ package de.heedlesssoap.pinseekerbackend.services;
 import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.ExtendedApplicationUserDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.UpdateApplicationUserDTO;
+import de.heedlesssoap.pinseekerbackend.entities.Role;
 import de.heedlesssoap.pinseekerbackend.repositories.LogRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.PinRepository;
+import de.heedlesssoap.pinseekerbackend.repositories.RoleRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
 import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -25,14 +28,16 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final LogRepository logRepository;
     private final PinRepository pinRepository;
+    private final RoleRepository roleRepository;
     private final TokenService tokenService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, LogRepository logRepository, PinRepository pinRepository, TokenService tokenService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, LogRepository logRepository, PinRepository pinRepository, TokenService tokenService, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.logRepository = logRepository;
         this.pinRepository = pinRepository;
         this.tokenService = tokenService;
+        this.roleRepository = roleRepository;
     }
 
     public ResponseEntity<Map<String, String>> createUser(UpdateApplicationUserDTO updateApplicationUserDTO) {
@@ -51,6 +56,7 @@ public class UserService {
         created_user.setHasProfilePicture(false);
         created_user.setProfilePicture(null);
         created_user.setJoinedAt(user.getJoinedAt());
+        created_user.setAuthorities(Set.of(roleRepository.findByAuthority("USER").get()));
 
         created_user.setIsEnabled(true);
         userRepository.save(created_user);

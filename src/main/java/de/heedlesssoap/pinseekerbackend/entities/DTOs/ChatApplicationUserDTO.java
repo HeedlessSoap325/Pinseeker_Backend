@@ -41,7 +41,7 @@ public class ChatApplicationUserDTO {
         return profile_picture;
     }
 
-    public String getPublicRSAKey() {
+    public String getPublicRsaKey() {
         return public_rsa_key;
     }
 
