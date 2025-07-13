@@ -3,7 +3,6 @@ package de.heedlesssoap.pinseekerbackend.services;
 import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.ExtendedApplicationUserDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.UpdateApplicationUserDTO;
-import de.heedlesssoap.pinseekerbackend.entities.Role;
 import de.heedlesssoap.pinseekerbackend.repositories.LogRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.PinRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.RoleRepository;
@@ -46,7 +45,7 @@ public class UserService {
 
         if(!passwordEncoder.matches(updateApplicationUserDTO.getPassword(), user.getPassword()) || user.isEnabled()) {
             throw new AccessDeniedException(Constants.ACCESS_DENIED);
-        } else if (updateApplicationUserDTO.getPublicRSAKey().isBlank()) {
+        } else if (updateApplicationUserDTO.getPublicRsaKey().isBlank()) {
             throw new IllegalArgumentException(Constants.NO_RSA_KEY);
         }
         ApplicationUser created_user = updateApplicationUserDTO.toApplicationUser();

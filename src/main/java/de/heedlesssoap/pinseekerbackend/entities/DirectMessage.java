@@ -1,6 +1,5 @@
 package de.heedlesssoap.pinseekerbackend.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -16,14 +15,12 @@ public class DirectMessage {
     private String receiver_encrypted_message;
 
     @Column(nullable = false)
-    @JsonProperty("receiver_encrypted_aes_key")
     private String receiver_encrypted_aes_key;
 
     @Column(nullable = false)
     private String sender_encrypted_message;
 
     @Column(nullable = false)
-    @JsonProperty("sender_encrypted_aes_key")
     private String sender_encrypted_aes_key;
 
     @Column(nullable = false)
@@ -81,11 +78,11 @@ public class DirectMessage {
         this.receiver_encrypted_message = receiver_encrypted_message;
     }
 
-    public String getReceiverEncryptedAESKey() {
+    public String getReceiverEncryptedAesKey() {
         return receiver_encrypted_aes_key;
     }
 
-    public void setReceiverEncryptedAESKey(String receiver_encrypted_aes_key) {
+    public void setReceiverEncryptedAesKey(String receiver_encrypted_aes_key) {
         this.receiver_encrypted_aes_key = receiver_encrypted_aes_key;
     }
 
@@ -97,11 +94,11 @@ public class DirectMessage {
         this.sender_encrypted_message = sender_encrypted_message;
     }
 
-    public String getSenderEncryptedAESKey() {
+    public String getSenderEncryptedAesKey() {
         return sender_encrypted_aes_key;
     }
 
-    public void setSenderEncryptedAESKey(String sender_encrypted_aes_key) {
+    public void setSenderEncryptedAesKey(String sender_encrypted_aes_key) {
         this.sender_encrypted_aes_key = sender_encrypted_aes_key;
     }
 

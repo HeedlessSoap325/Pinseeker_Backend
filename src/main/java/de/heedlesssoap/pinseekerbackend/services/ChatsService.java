@@ -64,10 +64,10 @@ public class ChatsService {
 
                     if (message.getSender().equals(requestSender)) {
                         directMessageDTO.setEncryptedMessage(message.getSenderEncryptedMessage());
-                        directMessageDTO.setEncryptedAesKey(message.getSenderEncryptedAESKey());
+                        directMessageDTO.setEncryptedAesKey(message.getSenderEncryptedAesKey());
                     }else{
                         directMessageDTO.setEncryptedMessage(message.getReceiverEncryptedMessage());
-                        directMessageDTO.setEncryptedAesKey(message.getReceiverEncryptedAESKey());
+                        directMessageDTO.setEncryptedAesKey(message.getReceiverEncryptedAesKey());
                     }
                     return directMessageDTO;
                 }).collect(Collectors.toSet());
@@ -93,7 +93,7 @@ public class ChatsService {
             HashMap<Integer, String> chat_info = new HashMap<>();
             chat_info.put(0, otherUser.getUsername());
             chat_info.put(1, DateUtils.formatDate(last_message.getCreatedAt()));
-            chat_info.put(2, last_message.getSender().equals(requestSender) ? last_message.getSenderEncryptedAESKey() : last_message.getReceiverEncryptedAESKey());
+            chat_info.put(2, last_message.getSender().equals(requestSender) ? last_message.getSenderEncryptedAesKey() : last_message.getReceiverEncryptedAesKey());
             chat_info.put(3, last_message.getSender().equals(requestSender) ? last_message.getSenderEncryptedMessage() : last_message.getReceiverEncryptedMessage());
             chat_list.put(chat.getChatId(), chat_info);
         });
@@ -148,9 +148,9 @@ public class ChatsService {
         Chat chat = getCheckedChat(chatId, sender);
 
         if(message.getSenderEncryptedMessage().isBlank() ||
-            message.getSenderEncryptedAESKey().isBlank() ||
+            message.getSenderEncryptedAesKey().isBlank() ||
             message.getReceiverEncryptedMessage().isBlank() ||
-            message.getReceiverEncryptedAESKey().isBlank()) {
+            message.getReceiverEncryptedAesKey().isBlank()) {
             throw new IllegalArgumentException(Constants.MESSAGE_BLANK);
         }
 
@@ -201,9 +201,9 @@ public class ChatsService {
         Chat chat = this.getCheckedChat(chatId, sender);
         DirectMessage editable_message = this.getCheckedMessage(chat, sender, directMessageId);
 
-        editable_message.setSenderEncryptedAESKey(message.getSenderEncryptedAESKey());
+        editable_message.setSenderEncryptedAesKey(message.getSenderEncryptedAesKey());
         editable_message.setSenderEncryptedMessage(message.getSenderEncryptedMessage());
-        editable_message.setReceiverEncryptedAESKey(message.getReceiverEncryptedAESKey());
+        editable_message.setReceiverEncryptedAesKey(message.getReceiverEncryptedAesKey());
         editable_message.setReceiverEncryptedMessage(message.getReceiverEncryptedMessage());
 
         directMessageRepository.save(editable_message);

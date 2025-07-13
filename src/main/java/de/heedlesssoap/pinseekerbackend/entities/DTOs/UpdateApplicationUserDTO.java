@@ -90,11 +90,11 @@ public class UpdateApplicationUserDTO {
         this.is_profile_private = is_profile_private;
     }
 
-    public String getPublicRSAKey() {
+    public String getPublicRsaKey() {
         return public_rsa_key;
     }
 
-    public void setPublicRSAKey(String public_rsa_key) {
+    public void setPublicRsaKey(String public_rsa_key) {
         this.public_rsa_key = public_rsa_key;
     }
 
