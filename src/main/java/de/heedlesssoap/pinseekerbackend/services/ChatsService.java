@@ -44,7 +44,7 @@ public class ChatsService {
         this.tokenService = tokenService;
     }
 
-    public GetChatDTO convertToChatDTO(Chat chat, ApplicationUser requestSender) {
+    private GetChatDTO convertToChatDTO(Chat chat, ApplicationUser requestSender) {
         if(chat.getParticipants().size() != 2){
             System.out.println("Expected two Chat Participants but found " + chat.getParticipants().size() + "; chat_id: " + chat.getChatId());
             return null;
@@ -53,26 +53,8 @@ public class ChatsService {
         ApplicationUser otherUser = chat.getParticipants().stream()
                 .filter(user -> !user.getUserId().equals(requestSender.getUserId()))
                 .findFirst().get();
-        ChatApplicationUserDTO otherUserDTO = new ChatApplicationUserDTO().fromApplicationUser(otherUser);
 
-        Set<DirectMessageDTO> messageDTOs = chat.getMessages().stream()
-                .map(message -> {
-                    DirectMessageDTO directMessageDTO = new DirectMessageDTO();
-                    directMessageDTO.setDirectMessageId(message.getDirectMessageId());
-                    directMessageDTO.setSender(new BasicApplicationUserDTO().fromApplicationUser(message.getSender(), null));
-                    directMessageDTO.setCreatedAt(message.getCreatedAt());
-
-                    if (message.getSender().equals(requestSender)) {
-                        directMessageDTO.setEncryptedMessage(message.getSenderEncryptedMessage());
-                        directMessageDTO.setEncryptedAesKey(message.getSenderEncryptedAesKey());
-                    }else{
-                        directMessageDTO.setEncryptedMessage(message.getReceiverEncryptedMessage());
-                        directMessageDTO.setEncryptedAesKey(message.getReceiverEncryptedAesKey());
-                    }
-                    return directMessageDTO;
-                }).collect(Collectors.toSet());
-
-        return new GetChatDTO(chat.getChatId(), otherUserDTO, messageDTOs, chat.getChatState());
+        return new GetChatDTO().fromChat(chat, otherUser);
     }
 
     public HashMap<Integer, HashMap<Integer, String>> convertToChatsList(List<Chat> chats, ApplicationUser requestSender) {
@@ -201,12 +183,12 @@ public class ChatsService {
         Chat chat = this.getCheckedChat(chatId, sender);
         DirectMessage editable_message = this.getCheckedMessage(chat, sender, directMessageId);
 
-        editable_message.setSenderEncryptedAesKey(message.getSenderEncryptedAesKey());
-        editable_message.setSenderEncryptedMessage(message.getSenderEncryptedMessage());
-        editable_message.setReceiverEncryptedAesKey(message.getReceiverEncryptedAesKey());
-        editable_message.setReceiverEncryptedMessage(message.getReceiverEncryptedMessage());
+        message.setDirectMessageId(editable_message.getDirectMessageId());
+        message.setSender(editable_message.getSender());
+        message.setChat(editable_message.getChat());
+        message.setCreatedAt(editable_message.getCreatedAt());
 
-        directMessageRepository.save(editable_message);
+        directMessageRepository.save(message);
         return new ResponseEntity<>(Constants.ACTION_SUCCESSFUL, HttpStatus.OK);
     }
 

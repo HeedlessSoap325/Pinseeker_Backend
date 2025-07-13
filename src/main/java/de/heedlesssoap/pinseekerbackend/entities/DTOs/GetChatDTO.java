@@ -1,8 +1,11 @@
 package de.heedlesssoap.pinseekerbackend.entities.DTOs;
 
+import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
+import de.heedlesssoap.pinseekerbackend.entities.Chat;
 import de.heedlesssoap.pinseekerbackend.entities.enums.ChatState;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class GetChatDTO {
     private Integer chat_id;
@@ -53,5 +56,15 @@ public class GetChatDTO {
 
     public void setChatState(ChatState chat_state) {
         this.chat_state = chat_state;
+    }
+
+    public GetChatDTO fromChat(Chat chat, ApplicationUser otherUser) {
+        this.setChatId(chat.getChatId());
+        this.setParticipant(new ChatApplicationUserDTO().fromApplicationUser(otherUser));
+        this.setMessages(chat.getMessages().stream().map(message ->
+                new DirectMessageDTO().fromDirectMessage(message, message.getSender().equals(otherUser))).collect(Collectors.toSet())
+        );
+        this.setChatState(chat.getChatState());
+        return this;
     }
 }

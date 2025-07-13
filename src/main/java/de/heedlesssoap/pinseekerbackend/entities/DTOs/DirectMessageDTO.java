@@ -1,5 +1,7 @@
 package de.heedlesssoap.pinseekerbackend.entities.DTOs;
 
+import de.heedlesssoap.pinseekerbackend.entities.DirectMessage;
+
 import java.util.Date;
 
 public class DirectMessageDTO {
@@ -12,17 +14,21 @@ public class DirectMessageDTO {
 
     private Date created_at;
 
-    private BasicApplicationUserDTO sender;
+    /** TODO
+     *   Maybe replace with Boolean like was_sender_other_user, as it is only used to send data, not receive data
+     *   Would prevent multiple Data to be sent, that is unnecessary, as the GetChatDTO already caries User info
+    **/
+    private Boolean was_sender_other_user;
 
     public DirectMessageDTO() {
     }
 
-    public DirectMessageDTO(Integer direct_message_id, String encrypted_message, String encrypted_aes_key, Date created_at, BasicApplicationUserDTO sender) {
+    public DirectMessageDTO(Integer direct_message_id, String encrypted_message, String encrypted_aes_key, Date created_at, Boolean was_sender_other_user) {
         this.direct_message_id = direct_message_id;
         this.encrypted_message = encrypted_message;
         this.encrypted_aes_key = encrypted_aes_key;
         this.created_at = created_at;
-        this.sender = sender;
+        this.was_sender_other_user = was_sender_other_user;
     }
 
     public String getEncryptedMessage() {
@@ -57,11 +63,26 @@ public class DirectMessageDTO {
         this.created_at = created_at;
     }
 
-    public BasicApplicationUserDTO getSender() {
-        return sender;
+    public Boolean getWasSenderOtherUser() {
+        return was_sender_other_user;
     }
 
-    public void setSender(BasicApplicationUserDTO sender) {
-        this.sender = sender;
+    public void setWasSenderOtherUser(Boolean was_sender_other_user) {
+        this.was_sender_other_user = was_sender_other_user;
+    }
+
+    public DirectMessageDTO fromDirectMessage(DirectMessage directMessage, Boolean was_sender_other_user) {
+        this.direct_message_id = directMessage.getDirectMessageId();
+        this.created_at = directMessage.getCreatedAt();
+        this.was_sender_other_user = was_sender_other_user;
+
+        if (!was_sender_other_user) {
+            this.setEncryptedMessage(directMessage.getSenderEncryptedMessage());
+            this.setEncryptedAesKey(directMessage.getSenderEncryptedAesKey());
+        }else{
+            this.setEncryptedMessage(directMessage.getReceiverEncryptedMessage());
+            this.setEncryptedAesKey(directMessage.getReceiverEncryptedAesKey());
+        }
+        return this;
     }
 }
