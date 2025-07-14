@@ -5,6 +5,7 @@ import de.heedlesssoap.pinseekerbackend.entities.Log;
 import de.heedlesssoap.pinseekerbackend.repositories.LogRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
 import de.heedlesssoap.pinseekerbackend.utils.Constants;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,8 +22,8 @@ public class ImageService {
     final UserRepository userRepository;
     final LogRepository logRepository;
 
-    public ImageService(UserRepository userRepository, LogRepository logRepository) throws IOException {
-        this.uploadPath = Paths.get(Constants.IMAGES_UPLOAD_DIR).toAbsolutePath().normalize();
+    public ImageService(UserRepository userRepository, LogRepository logRepository, @Value("${file.upload-dir}") String images_upload_dir) throws IOException {
+        this.uploadPath = Paths.get(images_upload_dir).toAbsolutePath().normalize();
         Files.createDirectories(this.uploadPath);
         this.userRepository = userRepository;
         this.logRepository = logRepository;
