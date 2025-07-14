@@ -8,8 +8,9 @@ public class Constants {
     public static final String NO_RSA_KEY = "Your Client has not provided a public RSA Key. Please try again.";
 
     public static final String CHAT_ALREADY_EXISTS = "This Chat already exists.";
-    public static final String USER_HAS_NO_CHATS = "You have no chats.";
     public static final String CHAT_NOT_FOUND = "This Chat does not exist.";
+    public static final String CHAT_NOT_WRITABLE = "This Chat is read-only, because the other Participant deleted his Account.";
+    public static final String CHAT_INVALID_SIZE = "The Chat you requested did not have a member-count of 2.";
 
     public static final String INVALID_TOKEN = "The provided Token is invalid. Try logging in again.";
     public static final String INVALID_PIN = "The provided Pin-Data is invalid or malformed.";

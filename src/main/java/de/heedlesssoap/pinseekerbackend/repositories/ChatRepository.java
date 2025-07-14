@@ -13,7 +13,9 @@ import java.util.Set;
 
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Integer> {
-    Optional<List<Chat>> findChatsByParticipantsContaining(Set<ApplicationUser> participants);
+    @Query("SELECT c FROM Chat c " +
+        "WHERE :user MEMBER OF c.participants")
+    Optional<List<Chat>> findChatsByParticipants(@Param("user") ApplicationUser user);
 
     @Query("SELECT COUNT(c) = 1 FROM Chat c " +
             "WHERE :user1 MEMBER OF c.participants AND :user2 MEMBER OF c.participants")
