@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface LogRepository extends JpaRepository<Log, Integer> {
     @Query("SELECT COUNT(DISTINCT l.parent_pin) FROM Log l " +
@@ -18,7 +19,7 @@ public interface LogRepository extends JpaRepository<Log, Integer> {
 
     @Query("SELECT DISTINCT l.parent_pin FROM Log l "+
             "WHERE l.logger = :user AND l.type = :type")
-    List<Pin> getPinsByLoggerAndType(@Param("user") ApplicationUser user, @Param("type") LogType type);
+    Optional<List<Pin>> getPinsByLoggerAndType(@Param("user") ApplicationUser user, @Param("type") LogType type);
 
     @Query("SELECT COUNT(DISTINCT l.parent_pin) FROM Log l "+
             "WHERE l.logger = :user AND l.type = :logType AND l.parent_pin.type = :pinType")

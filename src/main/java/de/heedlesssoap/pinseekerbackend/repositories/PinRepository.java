@@ -19,7 +19,7 @@ public interface PinRepository extends JpaRepository<Pin, Integer> {
 
     @Query("SELECT p FROM Pin p " +
             "WHERE p.hider = :user")
-    List<Pin> getPinsByHider(@Param("user") ApplicationUser hider);
+    Optional<List<Pin>> getPinsByHider(@Param("user") ApplicationUser hider);
 
     @Query("SELECT COUNT(p.pin_id) FROM Pin p " +
             "WHERE p.hider = :user AND p.type = :type")
