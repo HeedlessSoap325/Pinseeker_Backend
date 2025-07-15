@@ -6,6 +6,7 @@ public class Constants {
     public static final String USER_NOT_ENABLED = "This user has not been enabled. Please finish setting up your account before logging in again.";
     public static final String BAD_CREDENTIALS = "Bad credentials";
     public static final String NO_RSA_KEY = "Your Client has not provided a public RSA Key. Please try again.";
+    public static final String USER_DELETED = "The User, associated to the action you tried to perform, is deleted.";
 
     public static final String CHAT_ALREADY_EXISTS = "This Chat already exists.";
     public static final String CHAT_NOT_FOUND = "This Chat does not exist.";
@@ -41,4 +42,8 @@ public class Constants {
     public static final String FILE_ALREADY_EXISTS = "Image could not be saved, because it already exists. Please Try again.";
     public static final String PROFILE_PICTURE_UPLOAD_DIR = "profile_pictures";
     public static final String LOG_IMAGE_UPLOAD_DIR = "log_images";
+    public static final String DEFAULT_PROFILE_PICTURE = "default.jpg";
+    public static final String DELETED_PROFILE_PICTURE = "deleted.jpg";
+
+    public static final String SQL_NULL_ERROR = "A non-null Field was set to null. Failed to generate Query for Database.";
 }

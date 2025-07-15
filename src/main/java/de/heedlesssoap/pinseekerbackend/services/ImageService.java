@@ -5,6 +5,9 @@ import de.heedlesssoap.pinseekerbackend.entities.Log;
 import de.heedlesssoap.pinseekerbackend.repositories.LogRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
 import de.heedlesssoap.pinseekerbackend.utils.Constants;
+import jakarta.annotation.PreDestroy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,19 +17,67 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 public class ImageService {
     private final Path uploadPath;
-    final UserRepository userRepository;
-    final LogRepository logRepository;
+    private final LogRepository logRepository;
+    private final UserRepository userRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
+    private boolean cleanUploadsDirOnShutdown = false;
 
-    public ImageService(UserRepository userRepository, LogRepository logRepository, @Value("${file.upload-dir}") String images_upload_dir) throws IOException {
+    public ImageService(UserRepository userRepository, LogRepository logRepository, @Value("${file.upload-dir}") String images_upload_dir, @Value("${spring.jpa.hibernate.ddl-auto}") String data_handle_mode) throws IOException {
         this.uploadPath = Paths.get(images_upload_dir).toAbsolutePath().normalize();
-        Files.createDirectories(this.uploadPath);
-        this.userRepository = userRepository;
         this.logRepository = logRepository;
+        this.userRepository = userRepository;
+
+        Files.createDirectories(this.uploadPath);
+        switch (data_handle_mode) {
+            case "create", "drop": {
+                cleanUploadsDir();
+                break;
+            }
+            case "create-drop" : {
+                cleanUploadsDirOnShutdown = true;
+                break;
+            }
+            default: {
+                logger.info("No Mode for Data-handling set by property 'spring.jpa.hibernate.ddl-auto', falling back to default: none");
+            }
+        }
+    }
+
+    private void cleanUploadsDir() {
+        List.of(this.uploadPath.resolve(Constants.LOG_IMAGE_UPLOAD_DIR), this.uploadPath.resolve(Constants.PROFILE_PICTURE_UPLOAD_DIR)).forEach(dir -> {
+            if (!Files.isDirectory(dir)) {
+                throw new IllegalArgumentException("Not a directory: " + dir);
+            }
+
+            try (Stream<Path> files = Files.list(dir)) {
+                files.forEach(path -> {
+                    try {
+                        if (Files.isDirectory(path)) {
+                            logger.error("Failed to purge Directory {} because {} is a Directory", dir, path.getFileName());
+                            logger.error("{} should not contain Directories. This implies a Bug in ImageService.java", dir.toAbsolutePath());
+                        } else if (dir.equals(this.uploadPath.resolve(Constants.PROFILE_PICTURE_UPLOAD_DIR))
+                                && (path.equals(this.uploadPath.resolve(Constants.PROFILE_PICTURE_UPLOAD_DIR).resolve(Constants.DEFAULT_PROFILE_PICTURE))
+                                || path.equals(this.uploadPath.resolve(Constants.PROFILE_PICTURE_UPLOAD_DIR).resolve(Constants.DELETED_PROFILE_PICTURE)))
+                        ) {
+                            logger.info("Excluding File '{}' in {} from Deletion because it is a standard File", path.getFileName(), dir);
+                        }else {
+                            Files.delete(path);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException("Failed to delete File " + path, e);
+                    }
+                });
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to delete Directory" + dir, e);
+            }
+        });
     }
 
     private void checkImage(MultipartFile image) throws IllegalArgumentException {
@@ -56,7 +107,7 @@ public class ImageService {
         checkImage(profilePicture);
 
         Path profile_picture_dir = Paths.get(Constants.PROFILE_PICTURE_UPLOAD_DIR);
-        if(user.getHasProfilePicture()){
+        if(user.getHasCustomProfilePicture()){
             safeDeleteImage(profile_picture_dir, user.getProfilePicture());
         }
 
@@ -66,7 +117,7 @@ public class ImageService {
 
         saveImage(profile_picture_dir, filename, profilePicture);
 
-        user.setHasProfilePicture(true);
+        user.setHasCustomProfilePicture(true);
         user.setProfilePicture(filename);
 
         userRepository.save(user);
@@ -93,8 +144,8 @@ public class ImageService {
         Path profile_picture_dir = Paths.get(Constants.PROFILE_PICTURE_UPLOAD_DIR);
         safeDeleteImage(profile_picture_dir, user.getProfilePicture());
 
-        user.setHasProfilePicture(false);
-        user.setProfilePicture(null);
+        user.setHasCustomProfilePicture(false);
+        user.setProfilePicture(Constants.DEFAULT_PROFILE_PICTURE);
 
         userRepository.save(user);
     }
@@ -107,5 +158,12 @@ public class ImageService {
         log.setImageURL(null);
 
         logRepository.save(log);
+    }
+
+    @PreDestroy
+    public void onShutdown() {
+        if (cleanUploadsDirOnShutdown) {
+            cleanUploadsDir();
+        }
     }
 }

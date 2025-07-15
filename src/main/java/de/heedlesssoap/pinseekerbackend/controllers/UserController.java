@@ -44,7 +44,12 @@ public class UserController {
     }
 
     @GetMapping("/{user_id}")
-    public ResponseEntity<ExtendedApplicationUserDTO> getUser(@PathVariable("user_id") Integer user_id){
-        return userService.getUser(user_id);
+    public ResponseEntity<ExtendedApplicationUserDTO> getUser(@RequestHeader("Authorization") String token, @PathVariable("user_id") Integer user_id) throws InvalidJWTTokenException{
+        return userService.getUser(token, user_id);
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<Map<String, String>> deleteUser(@RequestHeader("Authorization") String token, @RequestBody String password) throws InvalidJWTTokenException, IOException {
+        return userService.deleteUser(token, password);
     }
 }

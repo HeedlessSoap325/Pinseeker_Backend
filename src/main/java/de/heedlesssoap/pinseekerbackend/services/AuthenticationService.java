@@ -5,16 +5,19 @@ import de.heedlesssoap.pinseekerbackend.entities.DTOs.BasicApplicationUserDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.LoginResponseDTO;
 import de.heedlesssoap.pinseekerbackend.entities.Role;
 import de.heedlesssoap.pinseekerbackend.entities.enums.LogType;
+import de.heedlesssoap.pinseekerbackend.exceptions.DeletedException;
 import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsException;
 import de.heedlesssoap.pinseekerbackend.repositories.LogRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.RoleRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
+import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,15 +68,17 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<LoginResponseDTO> loginUser(String username, String password) throws AuthenticationException {
+        ApplicationUser user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(Constants.USERNAME_NOT_FOUND));
+        if(user.getIsDeleted()){
+            throw new DeletedException();
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
 
         String token = tokenService.generateJwt(authentication.getName(), (Collection<Role>) authentication.getAuthorities());
-
-        //This is okay, because the authenticationManager would throw an exception if the User wouldn't exist
-        //Therefore, because there was no Exception, the User must exist
-        ApplicationUser user = userRepository.findByUsername(username).get();
         BasicApplicationUserDTO dto = new BasicApplicationUserDTO().fromApplicationUser(user, logRepository.getNumberOfPinsByLoggerAndType(user, LogType.FOUND));
         return new ResponseEntity<>(new LoginResponseDTO(dto, token), HttpStatus.OK);
     }

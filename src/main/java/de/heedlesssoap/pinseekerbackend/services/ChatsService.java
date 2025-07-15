@@ -7,12 +7,15 @@ import de.heedlesssoap.pinseekerbackend.entities.DirectMessage;
 import de.heedlesssoap.pinseekerbackend.entities.enums.ChatState;
 import de.heedlesssoap.pinseekerbackend.exceptions.ChatAlreadyExistsException;
 import de.heedlesssoap.pinseekerbackend.exceptions.ChatNotWritableException;
+import de.heedlesssoap.pinseekerbackend.exceptions.DeletedException;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.repositories.ChatRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.DirectMessageRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
 import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import de.heedlesssoap.pinseekerbackend.utils.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -29,6 +32,7 @@ public class ChatsService {
     final ChatRepository chatRepository;
     final UserRepository userRepository;
     final TokenService tokenService;
+    private static final Logger logger = LoggerFactory.getLogger(ChatsService.class);
 
     public ChatsService(DirectMessageRepository directMessageRepository, ChatRepository chatRepository, UserRepository userRepository, TokenService tokenService) {
         this.directMessageRepository = directMessageRepository;
@@ -39,7 +43,8 @@ public class ChatsService {
 
     private ApplicationUser getOtherUserInChat(Chat chat, ApplicationUser sender) throws IllegalStateException {
         if(chat.getParticipants().size() != 2){
-            System.out.println("Expected two Chat Participants but found " + chat.getParticipants().size() + "; chat_id: " + chat.getChatId());
+            logger.error("Expected two Chat Participants but found {}; chat_id: {}", chat.getParticipants().size(), chat.getChatId());
+            logger.error("Size of Chat should always be two. This implies a Bug in ChatsService.java");
             throw new IllegalArgumentException(Constants.CHAT_INVALID_SIZE);
         }
 
@@ -143,6 +148,10 @@ public class ChatsService {
         }
         ApplicationUser target_user = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new UsernameNotFoundException(Constants.USERNAME_NOT_FOUND));
+
+        if(target_user.getIsDeleted()){
+            throw new DeletedException();
+        }
 
         if(chatRepository.doesChatWithUserAlreadyExist(sender, target_user)) {
             throw new ChatAlreadyExistsException();

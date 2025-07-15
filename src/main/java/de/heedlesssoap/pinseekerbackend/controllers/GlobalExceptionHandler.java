@@ -86,6 +86,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DeletedException.class)
+    public ResponseEntity<Map<String, String>> handleDeletedException(DeletedException exception){
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(PinNotLoggableException.class)
     public ResponseEntity<Map<String, String>> handlePinNotLoggableException(PinNotLoggableException exception){
         return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
@@ -94,5 +99,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ChatNotWritableException.class)
     public ResponseEntity<Map<String, String>> handleChatNotWritableException(ChatNotWritableException exception){
         return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> handleDataIntegrityViolationException(DataIntegrityViolationException exception){
+        return new ResponseEntity<>(Map.of("error", Constants.SQL_NULL_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

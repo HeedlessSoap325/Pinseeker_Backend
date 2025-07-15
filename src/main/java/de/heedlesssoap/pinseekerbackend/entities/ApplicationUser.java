@@ -1,5 +1,6 @@
 package de.heedlesssoap.pinseekerbackend.entities;
 
+import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import jakarta.persistence.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -24,13 +25,12 @@ public class ApplicationUser implements UserDetails {
     private Boolean is_premium;
 
     @Column(nullable = false)
-    private Boolean has_profile_picture;
+    private Boolean has_custom_profile_picture;
 
     private String profile_picture;
 
     private String profile_location;
 
-    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -43,6 +43,9 @@ public class ApplicationUser implements UserDetails {
 
     @Column(nullable = false)
     private Boolean is_enabled;
+
+    @Column(nullable = false)
+    private Boolean is_deleted;
 
     private String public_rsa_key;
 
@@ -57,21 +60,20 @@ public class ApplicationUser implements UserDetails {
     public ApplicationUser() {
         super();
         is_premium = false;
-        has_profile_picture = false;
-        profile_picture = null;
-        email = "";
+        has_custom_profile_picture = false;
+        profile_picture = Constants.DEFAULT_PROFILE_PICTURE;
         joined_at = new Date();
-        about = "";
         is_profile_private = false;
         is_enabled = false;
+        is_deleted = false;
         authorities = new HashSet<>();
     }
 
-    public ApplicationUser(String username, String password, Boolean is_premium, Boolean has_profile_picture, String profile_picture, String profile_location, String email, Date joined_at, String about, Boolean is_profile_private, Boolean is_enabled, String public_rsa_key, Set<Role> authorities) {
+    public ApplicationUser(String username, String password, Boolean is_premium, Boolean has_custom_profile_picture, String profile_picture, String profile_location, String email, Date joined_at, String about, Boolean is_profile_private, Boolean is_enabled, String public_rsa_key, Boolean is_deleted, Set<Role> authorities) {
         this.username = username;
         this.password = password;
         this.is_premium = is_premium;
-        this.has_profile_picture = has_profile_picture;
+        this.has_custom_profile_picture = has_custom_profile_picture;
         this.profile_picture = profile_picture;
         this.profile_location = profile_location;
         this.email = email;
@@ -79,6 +81,7 @@ public class ApplicationUser implements UserDetails {
         this.about = about;
         this.is_profile_private = is_profile_private;
         this.is_enabled = is_enabled;
+        this.is_deleted = is_deleted;
         this.public_rsa_key = public_rsa_key;
         this.authorities = authorities;
     }
@@ -126,20 +129,20 @@ public class ApplicationUser implements UserDetails {
         this.authorities = authorities;
     }
 
-    public Boolean getHasProfilePicture() {
-        return has_profile_picture;
+    public Boolean getHasCustomProfilePicture() {
+        return has_custom_profile_picture;
     }
 
-    public void setHasProfilePicture(Boolean hasProfilePicture) {
-        this.has_profile_picture = hasProfilePicture;
+    public void setHasCustomProfilePicture(Boolean hasProfilePicture) {
+        this.has_custom_profile_picture = hasProfilePicture;
     }
 
     public String getProfilePicture() {
         return profile_picture;
     }
 
-    public void setProfilePicture(String profilePictureURL) {
-        this.profile_picture = profilePictureURL;
+    public void setProfilePicture(String profilePicture) {
+        this.profile_picture = profilePicture;
     }
 
     public String getProfileLocation() {
@@ -190,9 +193,17 @@ public class ApplicationUser implements UserDetails {
         this.public_rsa_key = public_rsa_key;
     }
 
+    public Boolean getIsDeleted() {
+        return is_deleted;
+    }
+
+    public void setIsDeleted(Boolean is_deleted) {
+        this.is_deleted = is_deleted;
+    }
+
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !is_deleted;
     }
 
     @Override
@@ -211,7 +222,7 @@ public class ApplicationUser implements UserDetails {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", is_premium=" + is_premium +
-                ", has_profile_picture=" + has_profile_picture +
+                ", has_profile_picture=" + has_custom_profile_picture +
                 ", profile_picture='" + profile_picture + '\'' +
                 ", profile_location='" + profile_location + '\'' +
                 ", email='" + email + '\'' +
@@ -219,6 +230,7 @@ public class ApplicationUser implements UserDetails {
                 ", about='" + about + '\'' +
                 ", is_profile_private=" + is_profile_private +
                 ", is_enabled=" + is_enabled +
+                ", is_deleted=" + is_deleted +
                 ", public_rsa_key='" + public_rsa_key + '\'' +
                 ", authorities=" + authorities +
                 '}';

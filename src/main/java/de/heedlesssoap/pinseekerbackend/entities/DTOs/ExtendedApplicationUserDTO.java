@@ -16,8 +16,6 @@ public class ExtendedApplicationUserDTO {
 
     private Boolean is_premium;
 
-    private Boolean has_profile_picture;
-
     private String profile_picture;
 
     private String profile_location;
@@ -44,11 +42,10 @@ public class ExtendedApplicationUserDTO {
         this.hidden_pins = new HashMap<>();
     }
 
-    public ExtendedApplicationUserDTO(Integer user_id, String username, Boolean is_premium, Boolean has_profile_picture, String profile_picture, String profile_location, String email, Date joined_at, String about, Integer number_of_finds, Integer number_of_hides, HashMap<PinType, Integer> found_pins, HashMap<PinType, Integer> hidden_pins, Boolean is_profile_private) {
+    public ExtendedApplicationUserDTO(Integer user_id, String username, Boolean is_premium, String profile_picture, String profile_location, String email, Date joined_at, String about, Integer number_of_finds, Integer number_of_hides, HashMap<PinType, Integer> found_pins, HashMap<PinType, Integer> hidden_pins, Boolean is_profile_private) {
         this.user_id = user_id;
         this.username = username;
         this.is_premium = is_premium;
-        this.has_profile_picture = has_profile_picture;
         this.profile_picture = profile_picture;
         this.profile_location = profile_location;
         this.email = email;
@@ -83,14 +80,6 @@ public class ExtendedApplicationUserDTO {
 
     public void setIsPremium(Boolean is_premium) {
         this.is_premium = is_premium;
-    }
-
-    public Boolean getHasProfilePicture() {
-        return has_profile_picture;
-    }
-
-    public void setHasProfilePicture(Boolean has_profile_picture) {
-        this.has_profile_picture = has_profile_picture;
     }
 
     public String getProfileLocation() {
@@ -200,7 +189,6 @@ public class ExtendedApplicationUserDTO {
         this.user_id = applicationUser.getUserId();
         this.username = applicationUser.getUsername();
         this.is_premium = applicationUser.getIsPremium();
-        this.has_profile_picture = applicationUser.getHasProfilePicture();
         this.profile_picture = applicationUser.getProfilePicture();
         this.joined_at = applicationUser.getJoinedAt();
         this.is_profile_private = applicationUser.getIsProfilePrivate();
