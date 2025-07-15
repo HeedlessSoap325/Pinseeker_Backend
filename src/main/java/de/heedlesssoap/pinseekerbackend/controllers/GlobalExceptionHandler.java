@@ -1,10 +1,8 @@
 package de.heedlesssoap.pinseekerbackend.controllers;
 
-import de.heedlesssoap.pinseekerbackend.exceptions.ChatAlreadyExistsException;
-import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
-import de.heedlesssoap.pinseekerbackend.exceptions.InvalidPinException;
-import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsException;
+import de.heedlesssoap.pinseekerbackend.exceptions.*;
 import de.heedlesssoap.pinseekerbackend.utils.Constants;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -85,6 +83,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception){
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PinNotLoggableException.class)
+    public ResponseEntity<Map<String, String>> handlePinNotLoggableException(PinNotLoggableException exception){
+        return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ChatNotWritableException.class)
+    public ResponseEntity<Map<String, String>> handleChatNotWritableException(ChatNotWritableException exception){
         return new ResponseEntity<>(Map.of("error", exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,6 +1,7 @@
 package de.heedlesssoap.pinseekerbackend.entities;
 
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinSize;
+import de.heedlesssoap.pinseekerbackend.entities.enums.PinStatus;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinType;
 import jakarta.persistence.*;
 
@@ -57,6 +58,9 @@ public class Pin {
     @OneToMany(mappedBy = "parent_pin", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Log> logs;
 
+    @Enumerated(EnumType.STRING)
+    private PinStatus status;
+
     public Pin() {
         this.latitude = 0;
         this.longitude = 0;
@@ -70,9 +74,10 @@ public class Pin {
         this.hint = null;
         this.description = null;
         this.logs = new HashSet<Log>();
+        this.status = PinStatus.ACTIVE;
     }
 
-    public Pin(Integer pin_id, double latitude, double longitude, String name, PinType type, Boolean premium, Float difficulty, Float terrain, PinSize size, ApplicationUser hider, Date created_at, String hint, String description, Set<Log> logs) {
+    public Pin(Integer pin_id, double latitude, double longitude, String name, PinType type, Boolean premium, Float difficulty, Float terrain, PinSize size, ApplicationUser hider, Date created_at, String hint, String description, Set<Log> logs, PinStatus status) {
         this.pin_id = pin_id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -87,6 +92,7 @@ public class Pin {
         this.hint = hint;
         this.description = description;
         this.logs = logs;
+        this.status = status;
     }
 
     public Integer getPinId() {
@@ -201,6 +207,14 @@ public class Pin {
         this.logs = logs;
     }
 
+    public PinStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PinStatus status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Pin{" +
@@ -218,6 +232,7 @@ public class Pin {
                 ", hint='" + hint + '\'' +
                 ", description='" + description + '\'' +
                 ", logs=" + logs +
+                ", status=" + status +
                 '}';
     }
 }

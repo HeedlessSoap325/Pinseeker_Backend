@@ -90,10 +90,10 @@ public class LogDTO {
         this.imageURL = imageURL;
     }
 
-    public LogDTO fromLog(Log log){
+    public LogDTO fromLog(Log log, Integer number_of_finds){
         this.log_id = log.getLogId();
         this.type = log.getType();
-        this.logger = new BasicApplicationUserDTO().fromApplicationUser(log.getLogger(), null);
+        this.logger = new BasicApplicationUserDTO().fromApplicationUser(log.getLogger(), number_of_finds);
         this.message = log.getMessage();
         this.created_at = DateUtils.formatDate(log.getCreatedAt());
         this.has_image = log.getHasImage();

@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/pins")
@@ -24,7 +25,7 @@ public class PinsController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> createPin(@RequestHeader("Authorization") String token, @RequestBody PinDTO pindto) throws InvalidJWTTokenException, InvalidPinException, IllegalArgumentException {
+    public ResponseEntity<Map<String, String>> createPin(@RequestHeader("Authorization") String token, @RequestBody PinDTO pindto) throws InvalidJWTTokenException, InvalidPinException, IllegalArgumentException {
         return pinsService.createPin(token, pindto);
     }
 
@@ -34,17 +35,17 @@ public class PinsController {
     }
 
     @PutMapping("/{pin_id}")
-    public ResponseEntity<String> editPin(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @RequestBody PinDTO new_pindto) throws IllegalArgumentException, InvalidJWTTokenException, AccessDeniedException, InvalidPinException{
+    public ResponseEntity<Map<String, String>> editPin(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @RequestBody PinDTO new_pindto) throws IllegalArgumentException, InvalidJWTTokenException, AccessDeniedException, InvalidPinException{
         return pinsService.editPin(token, pin_id, new_pindto);
     }
 
     @DeleteMapping("/{pin_id}")
-    public ResponseEntity<String> deletePin(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException{
+    public ResponseEntity<Map<String, String>> deletePin(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException{
         return pinsService.deletePin(token, pin_id);
     }
 
     @PostMapping("/{pin_id}/logs")
-    public ResponseEntity<String> createLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @RequestBody LogDTO logdto) throws InvalidJWTTokenException, IllegalArgumentException {
+    public ResponseEntity<Map<String, String>> createLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @RequestBody LogDTO logdto) throws InvalidJWTTokenException, IllegalArgumentException {
         return pinsService.createLog(token, pin_id, logdto);
     }
 
@@ -53,23 +54,23 @@ public class PinsController {
         return pinsService.getLogs(token, pin_id);
     }
 
-    @PutMapping("/{pin_id}/logs")
-    public ResponseEntity<String> editLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @RequestHeader("log_id") Integer log_id , @RequestBody LogDTO new_log) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException{
+    @PutMapping("/{pin_id}/logs/{log_id}")
+    public ResponseEntity<Map<String, String>> editLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @PathVariable("log_id") Integer log_id , @RequestBody LogDTO new_log) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException{
         return pinsService.editLog(token, pin_id, log_id, new_log);
     }
 
-    @DeleteMapping("/{pin_id}/logs")
-    public ResponseEntity<String> deleteLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @RequestHeader("log_id") Integer log_id) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException, IOException {
+    @DeleteMapping("/{pin_id}/logs/{log_id}")
+    public ResponseEntity<Map<String, String>> deleteLog(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @PathVariable("log_id") Integer log_id) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException, IOException {
         return pinsService.deleteLog(token, pin_id, log_id);
     }
 
     @PutMapping("/{pin_id}/logs/{log_id}/image")
-    public ResponseEntity<String> updateImage(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @PathVariable("log_id") Integer log_id, @RequestParam(value = "image") MultipartFile image) throws InvalidJWTTokenException, IOException {
+    public ResponseEntity<Map<String, String>> updateImage(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @PathVariable("log_id") Integer log_id, @RequestParam(value = "image") MultipartFile image) throws InvalidJWTTokenException, IOException {
         return pinsService.updateImage(token, pin_id, log_id, image);
     }
 
     @DeleteMapping("/{pin_id}/logs/{log_id}/image")
-    public ResponseEntity<String> deleteImage(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @PathVariable("log_id") Integer log_id) throws InvalidJWTTokenException, IOException {
+    public ResponseEntity<Map<String, String>> deleteImage(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @PathVariable("log_id") Integer log_id) throws InvalidJWTTokenException, IOException {
         return pinsService.deleteImage(token, pin_id, log_id);
     }
     /**

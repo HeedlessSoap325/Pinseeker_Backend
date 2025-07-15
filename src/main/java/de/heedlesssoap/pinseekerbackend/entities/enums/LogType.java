@@ -7,7 +7,8 @@ public enum LogType {
     MAINTENANCE_REQUIRED("Owner maintenance required"),
     MAINTENANCE_PERFORMED("Owner maintenance performed"),
     DEACTIVATE("Temporarily disabled"),
-    ACTIVATE("Enabled");
+    ACTIVATE("Enabled"),
+    ARCHIVE("Archived");
 
     final String value;
 

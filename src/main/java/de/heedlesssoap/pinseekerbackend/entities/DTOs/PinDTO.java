@@ -2,6 +2,7 @@ package de.heedlesssoap.pinseekerbackend.entities.DTOs;
 
 import de.heedlesssoap.pinseekerbackend.entities.Pin;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinSize;
+import de.heedlesssoap.pinseekerbackend.entities.enums.PinStatus;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinType;
 import de.heedlesssoap.pinseekerbackend.utils.DateUtils;
 
@@ -34,11 +35,13 @@ public class PinDTO {
 
     private String description;
 
+    private PinStatus status;
+
     public PinDTO() {
         super();
     }
 
-    public PinDTO(Integer pin_id, double latitude, double longitude, String name, PinType type, Boolean premium, Float difficulty, PinSize size, Float terrain, String created_at, BasicApplicationUserDTO hider, String hint, String description) {
+    public PinDTO(Integer pin_id, double latitude, double longitude, String name, PinType type, Boolean premium, Float difficulty, PinSize size, Float terrain, String created_at, BasicApplicationUserDTO hider, String hint, String description, PinStatus status) {
         this.pin_id = pin_id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -52,6 +55,7 @@ public class PinDTO {
         this.hider = hider;
         this.hint = hint;
         this.description = description;
+        this.status = status;
     }
 
     public void setPin_id(Integer pin_id) {
@@ -106,6 +110,10 @@ public class PinDTO {
         this.description = description;
     }
 
+    public void setStatus(PinStatus status) {
+        this.status = status;
+    }
+
     public double getLatitude() {
         return latitude;
     }
@@ -158,6 +166,10 @@ public class PinDTO {
         return description;
     }
 
+    public PinStatus getStatus() {
+        return status;
+    }
+
     public PinDTO fromPin(Pin pin) {
         this.pin_id = pin.getPinId();
         this.latitude = pin.getLatitude();
@@ -172,6 +184,7 @@ public class PinDTO {
         this.created_at = DateUtils.formatDate(pin.getCreatedAt());
         this.hint = pin.getHint();
         this.description = pin.getDescription();
+        this.status = pin.getStatus();
         return this;
     }
 
@@ -189,6 +202,7 @@ public class PinDTO {
         pin.setCreatedAt(new Date());
         pin.setHint(this.hint);
         pin.setDescription(this.description);
+        pin.setStatus(this.status);
         return pin;
     }
 }
