@@ -1,5 +1,8 @@
 package de.heedlesssoap.pinseekerbackend.utils;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Constants {
     public static final String USERNAME_ALREADY_EXISTS = "This Username is already taken, please choose another one.";
     public static final String USERNAME_NOT_FOUND = "There is no user with this name.";
@@ -7,6 +10,7 @@ public class Constants {
     public static final String BAD_CREDENTIALS = "Bad credentials";
     public static final String NO_RSA_KEY = "Your Client has not provided a public RSA Key. Please try again.";
     public static final String USER_DELETED = "The User, associated to the action you tried to perform, is deleted.";
+    public static final String USERNAME_NOT_ACCEPTABLE = "The provided Username is not acceptable. Please chose another one.";
 
     public static final String CHAT_ALREADY_EXISTS = "This Chat already exists.";
     public static final String CHAT_NOT_FOUND = "This Chat does not exist.";
@@ -46,4 +50,17 @@ public class Constants {
     public static final String DELETED_PROFILE_PICTURE = "deleted.jpg";
 
     public static final String SQL_NULL_ERROR = "A non-null Field was set to null. Failed to generate Query for Database.";
+
+    private static final Set<String> banned_words = Set.of(
+            //Here banned words can be added, or a File input or anything else.
+    );
+
+    public static boolean isUsernameNotAllowed(String username) {
+        return username == null
+                || username.equals(Constants.DEFAULT_PROFILE_PICTURE.substring(0, Constants.DEFAULT_PROFILE_PICTURE.lastIndexOf(".")))
+                || username.equals(Constants.DELETED_PROFILE_PICTURE.substring(0, Constants.DELETED_PROFILE_PICTURE.lastIndexOf(".")))
+                || username.startsWith("DeletedUser@")
+                || username.isBlank()
+                || banned_words.contains(username);
+    }
 }

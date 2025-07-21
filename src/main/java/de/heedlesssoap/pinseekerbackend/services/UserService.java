@@ -80,7 +80,11 @@ public class UserService {
     }
 
     public ResponseEntity<Map<String, String>> createUser(UpdateApplicationUserDTO updateApplicationUserDTO) {
-        //TODO: Check if Username is allowed
+        //NOTE: this should be prevented by the AuthenticationService, but it's more secure to check anyways
+        //NOTE: because a deleted User could get re-enabled by some Bug otherwise.
+        if(Constants.isUsernameNotAllowed(updateApplicationUserDTO.getUsername())){
+            throw new IllegalArgumentException(Constants.USERNAME_NOT_ACCEPTABLE);
+        }
         ApplicationUser user = userRepository.findByUsername(updateApplicationUserDTO.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(Constants.USERNAME_NOT_FOUND));
 
@@ -102,7 +106,6 @@ public class UserService {
     }
 
     public ResponseEntity<Map<String, String>> updateUser(String token, String password, UpdateApplicationUserDTO updateApplicationUserDTO) throws InvalidJWTTokenException, AccessDeniedException, UsernameAlreadyExistsException {
-        //TODO: Check if Username is allowed
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         if(!isAuthenticated(sender.getUsername(), password)) {
             throw new AccessDeniedException(Constants.ACCESS_DENIED);
@@ -113,7 +116,11 @@ public class UserService {
         if(isPropertyNotUndefined(editable_user.getUsername()) && userRepository.findByUsername(editable_user.getUsername()).isPresent()) {
             throw new UsernameAlreadyExistsException();
         } else if (isPropertyNotUndefined(editable_user.getUsername())) {
-            sender.setUsername(editable_user.getUsername());
+            if(Constants.isUsernameNotAllowed(editable_user.getUsername())){
+                throw new IllegalArgumentException(Constants.USERNAME_NOT_ACCEPTABLE);
+            }else {
+                sender.setUsername(editable_user.getUsername());
+            }
         }
         if (isPropertyNotUndefined(editable_user.getPassword())) {
             sender.setPassword(passwordEncoder.encode(editable_user.getPassword()));

@@ -47,6 +47,9 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<Map<String, String>> registerUser(String username, String password) throws UsernameAlreadyExistsException {
+        if(Constants.isUsernameNotAllowed(username)){
+            throw new IllegalArgumentException(Constants.USERNAME_NOT_ACCEPTABLE);
+        }
         if (userRepository.findByUsername(username).isPresent()) {
             throw new UsernameAlreadyExistsException();
         }
