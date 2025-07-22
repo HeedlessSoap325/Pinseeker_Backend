@@ -77,7 +77,7 @@ public class PinsController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<Map<Integer, BasicPinDTO>> findPinsNearMe(@RequestHeader("Authorization") String token, @RequestBody FindPinsNearMeDTO findPinsNearMeDTO) throws InvalidJWTTokenException {
+    public ResponseEntity<List<BasicPinDTO>> findPinsNearMe(@RequestHeader("Authorization") String token, @RequestBody FindPinsNearMeDTO findPinsNearMeDTO) throws InvalidJWTTokenException {
         return pinsService.findPinsNearMe(token, findPinsNearMeDTO);
     }
 }

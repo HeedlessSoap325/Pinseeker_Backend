@@ -235,15 +235,11 @@ public class PinsService {
         return new ResponseEntity<>(Map.of("message", Constants.ACTION_SUCCESSFUL), HttpStatus.OK);
     }
 
-    public ResponseEntity<Map<Integer, BasicPinDTO>> findPinsNearMe(String token, FindPinsNearMeDTO dto) throws InvalidJWTTokenException {
+    public ResponseEntity<List<BasicPinDTO>> findPinsNearMe(String token, FindPinsNearMeDTO dto) throws InvalidJWTTokenException {
         ApplicationUser ignored = tokenService.getSenderFromJWT(token);
 
         List<BasicPinDTO> basic_pins_DTOs_near_location = pinRepository.getBasicPinDTOsNearLocation(dto.getLatitude(), dto.getLongitude(), dto.getRadius())
                 .orElse(new ArrayList<>());
-
-        Map<Integer, BasicPinDTO> pins_near_locationDTOs = new HashMap<>();
-        basic_pins_DTOs_near_location.forEach(basicPinDTO -> pins_near_locationDTOs.put(basicPinDTO.getPinId(), basicPinDTO));
-
-        return new ResponseEntity<>(pins_near_locationDTOs, HttpStatus.OK);
+        return new ResponseEntity<>(basic_pins_DTOs_near_location, HttpStatus.OK);
     }
 }
