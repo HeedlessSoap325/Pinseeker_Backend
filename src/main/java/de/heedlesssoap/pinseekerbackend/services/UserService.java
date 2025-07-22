@@ -1,16 +1,19 @@
 package de.heedlesssoap.pinseekerbackend.services;
 
 import de.heedlesssoap.pinseekerbackend.entities.ApplicationUser;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.BasicApplicationUserDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.ExtendedApplicationUserDTO;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.PinDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.UpdateApplicationUserDTO;
+import de.heedlesssoap.pinseekerbackend.entities.Pin;
 import de.heedlesssoap.pinseekerbackend.entities.enums.ChatState;
+import de.heedlesssoap.pinseekerbackend.entities.enums.LogType;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinStatus;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsException;
 import de.heedlesssoap.pinseekerbackend.repositories.*;
 import de.heedlesssoap.pinseekerbackend.utils.Constants;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -185,5 +189,57 @@ public class UserService {
         handleAnonymizedUserChats(anonymized_user);
 
         return new  ResponseEntity<>(Map.of("message", Constants.ACTION_SUCCESSFUL), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Set<PinDTO>> getFoundPins(String token, Integer user_id) throws InvalidJWTTokenException, UsernameNotFoundException, AccessDeniedException {
+        ApplicationUser sender = tokenService.getSenderFromJWT(token);
+        ApplicationUser requested_user = userRepository.findById(user_id)
+                .orElseThrow(() -> new UsernameNotFoundException(Constants.USERNAME_NOT_FOUND));
+        if(requested_user.getIsProfilePrivate() && !requested_user.equals(sender)) {
+            throw new AccessDeniedException(Constants.USER_PRIVATE);
+        }
+
+        List<Pin> found_pins = logRepository.getPinsByLoggerAndType(requested_user, LogType.FOUND).orElse(new ArrayList<>());
+        Set<PinDTO> found_pinsDTOs =  found_pins.stream().map(pin -> new PinDTO().fromPin(pin)).collect(Collectors.toSet());
+
+        return new ResponseEntity<>(found_pinsDTOs, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Set<PinDTO>> getHiddenPin(String token, Integer user_id) throws InvalidJWTTokenException, UsernameNotFoundException, AccessDeniedException {
+        ApplicationUser sender = tokenService.getSenderFromJWT(token);
+        ApplicationUser requested_user = userRepository.findById(user_id)
+                .orElseThrow(() -> new UsernameNotFoundException(Constants.USERNAME_NOT_FOUND));
+        if(requested_user.getIsProfilePrivate() && !requested_user.equals(sender)) {
+            throw new AccessDeniedException(Constants.USER_PRIVATE);
+        }
+
+        List<Pin> hidden_pins = pinRepository.getPinsByHider(requested_user).orElse(new ArrayList<>());
+        Set<PinDTO> hidden_pinsDTOs = hidden_pins.stream().map(pin -> new PinDTO().fromPin(pin)).collect(Collectors.toSet());
+
+        return new ResponseEntity<>(hidden_pinsDTOs, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Map<String, String>> upgradeUser(String token) throws InvalidJWTTokenException {
+        ApplicationUser sender = tokenService.getSenderFromJWT(token);
+
+        //NOTE: Normally, there should be some kind of payment or something, but I won't do that,
+        //NOTE: as this is just a learning Project and not meant for production or similar.
+        sender.setIsPremium(true);
+        userRepository.save(sender);
+
+        return new ResponseEntity<>(Map.of("message", Constants.ACTION_SUCCESSFUL), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Set<BasicApplicationUserDTO>> findUsersByUsername(String token, String username_part) throws InvalidJWTTokenException {
+        ApplicationUser sender = tokenService.getSenderFromJWT(token);
+
+        List<ApplicationUser> similar_users = userRepository.findFirst30ByUsernameContainingIgnoreCase(username_part)
+                .orElse(new ArrayList<>());
+        Set<BasicApplicationUserDTO> similar_usersDTOs = similar_users.stream()
+                .filter(user -> !user.equals(sender))
+                .map(user -> new BasicApplicationUserDTO().fromApplicationUser(user, null))
+                .collect(Collectors.toSet());
+
+        return new ResponseEntity<>(similar_usersDTOs, HttpStatus.OK);
     }
 }

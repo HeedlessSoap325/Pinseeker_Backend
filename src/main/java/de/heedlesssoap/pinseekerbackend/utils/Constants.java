@@ -1,6 +1,5 @@
 package de.heedlesssoap.pinseekerbackend.utils;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class Constants {
@@ -11,6 +10,7 @@ public class Constants {
     public static final String NO_RSA_KEY = "Your Client has not provided a public RSA Key. Please try again.";
     public static final String USER_DELETED = "The User, associated to the action you tried to perform, is deleted.";
     public static final String USERNAME_NOT_ACCEPTABLE = "The provided Username is not acceptable. Please chose another one.";
+    public static final String USER_PRIVATE = "This User has his profile set to private, therefore this information can not be viewed.";
 
     public static final String CHAT_ALREADY_EXISTS = "This Chat already exists.";
     public static final String CHAT_NOT_FOUND = "This Chat does not exist.";

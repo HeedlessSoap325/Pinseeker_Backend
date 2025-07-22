@@ -1,6 +1,8 @@
 package de.heedlesssoap.pinseekerbackend.controllers;
 
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.BasicApplicationUserDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.ExtendedApplicationUserDTO;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.PinDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.UpdateApplicationUserDTO;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
 import de.heedlesssoap.pinseekerbackend.exceptions.UsernameAlreadyExistsException;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/user")
@@ -51,5 +54,25 @@ public class UserController {
     @DeleteMapping("/")
     public ResponseEntity<Map<String, String>> deleteUser(@RequestHeader("Authorization") String token, @RequestBody String password) throws InvalidJWTTokenException, IOException {
         return userService.deleteUser(token, password);
+    }
+
+    @GetMapping("/{user_id}/found_pins")
+    public ResponseEntity<Set<PinDTO>> getUserFoundPins(@RequestHeader("Authorization") String token, @PathVariable("user_id") Integer user_id) throws InvalidJWTTokenException {
+        return userService.getFoundPins(token, user_id);
+    }
+
+    @GetMapping("/{user_id}/hidden_pins")
+    public ResponseEntity<Set<PinDTO>> getUserHiddenPins(@RequestHeader("Authorization") String token, @PathVariable("user_id") Integer user_id) throws InvalidJWTTokenException {
+        return userService.getHiddenPin(token, user_id);
+    }
+
+    @PostMapping("/upgrade")
+    public ResponseEntity<Map<String, String>> upgradeUser(@RequestHeader("Authorization") String token) throws InvalidJWTTokenException {
+        return userService.upgradeUser(token);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Set<BasicApplicationUserDTO>> findUsersByUsername(@RequestHeader("Authorization") String token, @RequestBody String username) throws InvalidJWTTokenException {
+        return userService.findUsersByUsername(token, username);
     }
 }
