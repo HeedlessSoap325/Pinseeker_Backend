@@ -4,7 +4,7 @@ import de.heedlesssoap.pinseekerbackend.entities.Pin;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinSize;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinStatus;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinType;
-import de.heedlesssoap.pinseekerbackend.utils.DateUtils;
+import de.heedlesssoap.pinseekerbackend.utils.Utils;
 
 import java.util.Date;
 
@@ -181,7 +181,7 @@ public class PinDTO {
         this.terrain = pin.getTerrain();
         this.size = pin.getSize();
         this.hider = new BasicApplicationUserDTO().fromApplicationUser(pin.getHider(), null);
-        this.created_at = DateUtils.formatDate(pin.getCreatedAt());
+        this.created_at = Utils.formatDate(pin.getCreatedAt());
         this.hint = pin.getHint();
         this.description = pin.getDescription();
         this.status = pin.getStatus();
@@ -191,8 +191,7 @@ public class PinDTO {
     public Pin toPin(){
         Pin pin = new Pin();
         pin.setPinId(this.pin_id);
-        pin.setLatitude(this.latitude);
-        pin.setLongitude(this.longitude);
+        pin.setLocation(this.latitude, this.longitude);
         pin.setName(this.name);
         pin.setType(this.type);
         pin.setPremium(this.premium);

@@ -13,7 +13,7 @@ import de.heedlesssoap.pinseekerbackend.repositories.ChatRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.DirectMessageRepository;
 import de.heedlesssoap.pinseekerbackend.repositories.UserRepository;
 import de.heedlesssoap.pinseekerbackend.utils.Constants;
-import de.heedlesssoap.pinseekerbackend.utils.DateUtils;
+import de.heedlesssoap.pinseekerbackend.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -103,7 +103,7 @@ public class ChatsService {
 
             Map<String, String> chat_info = new HashMap<>();
             chat_info.put("username", otherUser.getUsername());
-            chat_info.put("created_at", DateUtils.formatDate(last_message.getCreatedAt()));
+            chat_info.put("created_at", Utils.formatDate(last_message.getCreatedAt()));
             chat_info.put("last_message_encrypted_aes_key", last_message.getSender().equals(sender) ? last_message.getSenderEncryptedAesKey() : last_message.getReceiverEncryptedAesKey());
             chat_info.put("last_message_encrypted", last_message.getSender().equals(sender) ? last_message.getSenderEncryptedMessage() : last_message.getReceiverEncryptedMessage());
             chat_list.put(chat.getChatId(), chat_info);

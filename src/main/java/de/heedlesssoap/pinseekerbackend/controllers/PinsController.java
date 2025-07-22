@@ -1,5 +1,7 @@
 package de.heedlesssoap.pinseekerbackend.controllers;
 
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.BasicPinDTO;
+import de.heedlesssoap.pinseekerbackend.entities.DTOs.FindPinsNearMeDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.LogDTO;
 import de.heedlesssoap.pinseekerbackend.entities.DTOs.PinDTO;
 import de.heedlesssoap.pinseekerbackend.exceptions.InvalidJWTTokenException;
@@ -73,10 +75,9 @@ public class PinsController {
     public ResponseEntity<Map<String, String>> deleteImage(@RequestHeader("Authorization") String token, @PathVariable("pin_id") Integer pin_id, @PathVariable("log_id") Integer log_id) throws InvalidJWTTokenException, IOException {
         return pinsService.deleteImage(token, pin_id, log_id);
     }
-    /**
-     @GetMapping("/findNearMe")
-     public List<PinDTO> findPinsNearMe(@RequestHeader("Authorization") String token, Location){
 
-     }
-     **/
+    @GetMapping("/find")
+    public ResponseEntity<Map<Integer, BasicPinDTO>> findPinsNearMe(@RequestHeader("Authorization") String token, @RequestBody FindPinsNearMeDTO findPinsNearMeDTO) throws InvalidJWTTokenException {
+        return pinsService.findPinsNearMe(token, findPinsNearMeDTO);
+    }
 }

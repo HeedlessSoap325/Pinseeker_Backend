@@ -2,7 +2,7 @@ package de.heedlesssoap.pinseekerbackend.entities.DTOs;
 
 import de.heedlesssoap.pinseekerbackend.entities.Log;
 import de.heedlesssoap.pinseekerbackend.entities.enums.LogType;
-import de.heedlesssoap.pinseekerbackend.utils.DateUtils;
+import de.heedlesssoap.pinseekerbackend.utils.Utils;
 
 import java.util.Date;
 
@@ -95,7 +95,7 @@ public class LogDTO {
         this.type = log.getType();
         this.logger = new BasicApplicationUserDTO().fromApplicationUser(log.getLogger(), number_of_finds);
         this.message = log.getMessage();
-        this.created_at = DateUtils.formatDate(log.getCreatedAt());
+        this.created_at = Utils.formatDate(log.getCreatedAt());
         this.has_image = log.getHasImage();
         this.imageURL = log.getHasImage() ? log.getImageURL() : null;
         return this;

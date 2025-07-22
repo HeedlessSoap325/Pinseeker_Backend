@@ -3,7 +3,9 @@ package de.heedlesssoap.pinseekerbackend.entities;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinSize;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinStatus;
 import de.heedlesssoap.pinseekerbackend.entities.enums.PinType;
+import de.heedlesssoap.pinseekerbackend.utils.Utils;
 import jakarta.persistence.*;
+import org.locationtech.jts.geom.Point;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -16,11 +18,8 @@ public class Pin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pin_id;
 
-    @Column(nullable = false)
-    private double latitude;
-
-    @Column(nullable = false)
-    private double longitude;
+    @Column(columnDefinition = "geometry(Point,4326)", nullable = false)
+    private Point location;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -62,8 +61,6 @@ public class Pin {
     private PinStatus status;
 
     public Pin() {
-        this.latitude = 0;
-        this.longitude = 0;
         this.name = null;
         this.type = null;
         this.premium = false;
@@ -77,10 +74,9 @@ public class Pin {
         this.status = PinStatus.ACTIVE;
     }
 
-    public Pin(Integer pin_id, double latitude, double longitude, String name, PinType type, Boolean premium, Float difficulty, Float terrain, PinSize size, ApplicationUser hider, Date created_at, String hint, String description, Set<Log> logs, PinStatus status) {
+    public Pin(Integer pin_id, Point location, String name, PinType type, Boolean premium, Float difficulty, Float terrain, PinSize size, ApplicationUser hider, Date created_at, String hint, String description, Set<Log> logs, PinStatus status) {
         this.pin_id = pin_id;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.location = location;
         this.name = name;
         this.type = type;
         this.premium = premium;
@@ -104,19 +100,15 @@ public class Pin {
     }
 
     public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+        return location.getY();
     }
 
     public double getLongitude() {
-        return longitude;
+        return location.getX();
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setLocation(double latitude, double longitude) {
+        this.location = Utils.createPoint(longitude, latitude);
     }
 
     public String getName() {
@@ -219,8 +211,7 @@ public class Pin {
     public String toString() {
         return "Pin{" +
                 "pin_id=" + pin_id +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
+                ", location=" + location +
                 ", name='" + name + '\'' +
                 ", type=" + type +
                 ", premium=" + premium +
