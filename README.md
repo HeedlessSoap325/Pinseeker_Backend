@@ -239,4 +239,4 @@ or with ```null```, if you do not wish to have default pictures.
 
 # What Endpoints does the Backend have?
 
-//TODO
+To view the full API concept of this Application, as well as the required Parameters for each one, click [here](./api.md).
