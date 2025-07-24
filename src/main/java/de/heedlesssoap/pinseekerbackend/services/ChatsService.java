@@ -89,12 +89,12 @@ public class ChatsService {
                 message.getReceiverEncryptedAesKey().isBlank();
     }
 
-    public Map<Integer, Map<String, String>> getChats(String token) throws InvalidJWTTokenException, IllegalArgumentException {
+    public ResponseEntity<List<Map<String, String>>> getChats(String token) throws InvalidJWTTokenException, IllegalArgumentException {
         ApplicationUser sender = tokenService.getSenderFromJWT(token);
         List<Chat> user_chats = chatRepository.findChatsByParticipants(sender)
                 .orElse(new ArrayList<>());
 
-        Map<Integer, Map<String, String>> chat_list = new HashMap<>();
+        List<Map<String, String>> chat_list = new ArrayList<>();
         user_chats.forEach(chat -> {
             ApplicationUser otherUser = getOtherUserInChat(chat, sender);
 
@@ -106,9 +106,11 @@ public class ChatsService {
             chat_info.put("created_at", Utils.formatDate(last_message.getCreatedAt()));
             chat_info.put("last_message_encrypted_aes_key", last_message.getSender().equals(sender) ? last_message.getSenderEncryptedAesKey() : last_message.getReceiverEncryptedAesKey());
             chat_info.put("last_message_encrypted", last_message.getSender().equals(sender) ? last_message.getSenderEncryptedMessage() : last_message.getReceiverEncryptedMessage());
-            chat_list.put(chat.getChatId(), chat_info);
+            chat_info.put("chat_id", String.valueOf(chat.getChatId()));
+            chat_info.put("state", chat.getChatState().getValue());
+            chat_list.add(chat_info);
         });
-        return chat_list;
+        return new ResponseEntity<>(chat_list, HttpStatus.OK);
     }
 
     public ResponseEntity<GetChatDTO> getChat(String token, Integer chatId) throws InvalidJWTTokenException, IllegalArgumentException, AccessDeniedException {

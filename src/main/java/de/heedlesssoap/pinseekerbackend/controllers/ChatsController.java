@@ -10,6 +10,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,7 +34,7 @@ public class ChatsController {
     }
 
     @GetMapping("/")
-    public Map<Integer, Map<String, String>> getChats(@RequestHeader("Authorization") String token) throws InvalidJWTTokenException, IllegalArgumentException {
+    public ResponseEntity<List<Map<String, String>>> getChats(@RequestHeader("Authorization") String token) throws InvalidJWTTokenException, IllegalArgumentException {
         return chatsService.getChats(token);
     }
 
