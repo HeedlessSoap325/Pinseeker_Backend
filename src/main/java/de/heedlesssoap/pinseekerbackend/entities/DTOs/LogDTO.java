@@ -15,7 +15,7 @@ public class LogDTO {
 
     private String message;
 
-    private String created_at;
+    private long created_at;
 
     private Boolean has_image;
 
@@ -24,7 +24,7 @@ public class LogDTO {
     public LogDTO() {
     }
 
-    public LogDTO(Integer log_id, LogType type, BasicApplicationUserDTO logger, String message, String created_at, Boolean has_image, String imageURL) {
+    public LogDTO(Integer log_id, LogType type, BasicApplicationUserDTO logger, String message, long created_at, Boolean has_image, String imageURL) {
         this.log_id = log_id;
         this.type = type;
         this.logger = logger;
@@ -66,11 +66,11 @@ public class LogDTO {
         this.message = message;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return created_at;
     }
 
-    public void setCreatedAt(String created_at) {
+    public void setCreatedAt(long created_at) {
         this.created_at = created_at;
     }
 
@@ -95,7 +95,7 @@ public class LogDTO {
         this.type = log.getType();
         this.logger = new BasicApplicationUserDTO().fromApplicationUser(log.getLogger(), number_of_finds);
         this.message = log.getMessage();
-        this.created_at = Utils.formatDate(log.getCreatedAt());
+        this.created_at = log.getCreatedAt().getTime();
         this.has_image = log.getHasImage();
         this.imageURL = log.getHasImage() ? log.getImageURL() : null;
         return this;
@@ -106,7 +106,7 @@ public class LogDTO {
         log.setLogId(this.log_id);
         log.setType(this.type);
         log.setMessage(this.message);
-        log.setCreatedAt(new Date());
+        log.setCreatedAt(new Date(this.created_at));
         log.setHasImage(this.has_image);
         log.setImageURL(this.has_image ? this.imageURL : null);
         return log;

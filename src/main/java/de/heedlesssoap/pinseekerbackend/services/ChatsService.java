@@ -103,7 +103,7 @@ public class ChatsService {
 
             Map<String, String> chat_info = new HashMap<>();
             chat_info.put("username", otherUser.getUsername());
-            chat_info.put("created_at", Utils.formatDate(last_message.getCreatedAt()));
+            chat_info.put("created_at", String.valueOf(last_message.getCreatedAt().getTime()));
             chat_info.put("last_message_encrypted_aes_key", last_message.getSender().equals(sender) ? last_message.getSenderEncryptedAesKey() : last_message.getReceiverEncryptedAesKey());
             chat_info.put("last_message_encrypted", last_message.getSender().equals(sender) ? last_message.getSenderEncryptedMessage() : last_message.getReceiverEncryptedMessage());
             chat_info.put("chat_id", String.valueOf(chat.getChatId()));

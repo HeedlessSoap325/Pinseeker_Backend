@@ -29,7 +29,7 @@ public class PinDTO {
 
     private BasicApplicationUserDTO hider;
 
-    private String created_at;
+    private long created_at;
 
     private String hint;
 
@@ -41,7 +41,7 @@ public class PinDTO {
         super();
     }
 
-    public PinDTO(Integer pin_id, double latitude, double longitude, String name, PinType type, Boolean premium, Float difficulty, PinSize size, Float terrain, String created_at, BasicApplicationUserDTO hider, String hint, String description, PinStatus status) {
+    public PinDTO(Integer pin_id, double latitude, double longitude, String name, PinType type, Boolean premium, Float difficulty, PinSize size, Float terrain, long created_at, BasicApplicationUserDTO hider, String hint, String description, PinStatus status) {
         this.pin_id = pin_id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -94,7 +94,7 @@ public class PinDTO {
         this.size = size;
     }
 
-    public void setCreated_at(String created_at) {
+    public void setCreated_at(long created_at) {
         this.created_at = created_at;
     }
 
@@ -154,7 +154,7 @@ public class PinDTO {
         return hider;
     }
 
-    public String getCreated_at() {
+    public long getCreated_at() {
         return created_at;
     }
 
@@ -181,7 +181,7 @@ public class PinDTO {
         this.terrain = pin.getTerrain();
         this.size = pin.getSize();
         this.hider = new BasicApplicationUserDTO().fromApplicationUser(pin.getHider(), null);
-        this.created_at = Utils.formatDate(pin.getCreatedAt());
+        this.created_at = pin.getCreatedAt().getTime();
         this.hint = pin.getHint();
         this.description = pin.getDescription();
         this.status = pin.getStatus();
@@ -198,7 +198,7 @@ public class PinDTO {
         pin.setDifficulty(this.difficulty);
         pin.setTerrain(this.terrain);
         pin.setSize(this.size);
-        pin.setCreatedAt(new Date());
+        pin.setCreatedAt(new Date(this.created_at));
         pin.setHint(this.hint);
         pin.setDescription(this.description);
         pin.setStatus(this.status);

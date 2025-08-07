@@ -22,7 +22,7 @@ public class ExtendedApplicationUserDTO {
 
     private String email;
 
-    private Date joined_at;
+    private long joined_at;
 
     private String about;
 
@@ -42,7 +42,7 @@ public class ExtendedApplicationUserDTO {
         this.hidden_pins = new HashMap<>();
     }
 
-    public ExtendedApplicationUserDTO(Integer user_id, String username, Boolean is_premium, String profile_picture, String profile_location, String email, Date joined_at, String about, Integer number_of_finds, Integer number_of_hides, HashMap<PinType, Integer> found_pins, HashMap<PinType, Integer> hidden_pins, Boolean is_profile_private) {
+    public ExtendedApplicationUserDTO(Integer user_id, String username, Boolean is_premium, String profile_picture, String profile_location, String email, long joined_at, String about, Integer number_of_finds, Integer number_of_hides, HashMap<PinType, Integer> found_pins, HashMap<PinType, Integer> hidden_pins, Boolean is_profile_private) {
         this.user_id = user_id;
         this.username = username;
         this.is_premium = is_premium;
@@ -106,11 +106,11 @@ public class ExtendedApplicationUserDTO {
         this.email = email;
     }
 
-    public Date getJoinedAt() {
+    public long getJoinedAt() {
         return joined_at;
     }
 
-    public void setJoinedAt(Date joined_at) {
+    public void setJoinedAt(long joined_at) {
         this.joined_at = joined_at;
     }
 
@@ -190,7 +190,7 @@ public class ExtendedApplicationUserDTO {
         this.username = applicationUser.getUsername();
         this.is_premium = applicationUser.getIsPremium();
         this.profile_picture = applicationUser.getProfilePicture();
-        this.joined_at = applicationUser.getJoinedAt();
+        this.joined_at = applicationUser.getJoinedAt().getTime();
         this.is_profile_private = applicationUser.getIsProfilePrivate();
         return this;
     }

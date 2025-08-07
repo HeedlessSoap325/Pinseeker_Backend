@@ -10,11 +10,6 @@ import java.util.Date;
 public class Utils {
     private static final GeometryFactory geometryFactory = new GeometryFactory();
 
-    public static String formatDate(Date date){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        return sdf.format(date);
-    }
-
     public static Point createPoint(double longitude, double latitude) {
         Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
         point.setSRID(4326);
