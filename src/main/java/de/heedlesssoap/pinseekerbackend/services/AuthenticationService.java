@@ -83,6 +83,6 @@ public class AuthenticationService {
 
         String token = tokenService.generateJwt(authentication.getName(), (Collection<Role>) authentication.getAuthorities());
         BasicApplicationUserDTO dto = new BasicApplicationUserDTO().fromApplicationUser(user, logRepository.getNumberOfPinsByLoggerAndType(user, LogType.FOUND));
-        return new ResponseEntity<>(new LoginResponseDTO(dto, token), HttpStatus.OK);
+        return new ResponseEntity<>(new LoginResponseDTO(dto, token, user.getPublicRSAKey()), HttpStatus.OK);
     }
 }

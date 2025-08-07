@@ -47,6 +47,7 @@ public class ApplicationUser implements UserDetails {
     @Column(nullable = false)
     private Boolean is_deleted;
 
+    @Column(length = 1024)
     private String public_rsa_key;
 
     @ManyToMany(fetch = FetchType.EAGER)
