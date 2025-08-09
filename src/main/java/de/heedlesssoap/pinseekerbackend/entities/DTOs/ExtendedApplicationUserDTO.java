@@ -162,8 +162,8 @@ public class ExtendedApplicationUserDTO {
         this.is_profile_private = is_profile_private;
     }
 
-    public ExtendedApplicationUserDTO fromApplicationUser(ApplicationUser applicationUser, LogRepository logRepository, PinRepository pinRepository) {
-        if(applicationUser.getIsProfilePrivate()){
+    public ExtendedApplicationUserDTO fromApplicationUser(ApplicationUser applicationUser, LogRepository logRepository, PinRepository pinRepository, boolean make_user_private) {
+        if(make_user_private){
             this.profile_location = null;
             this.email = null;
             this.about = null;

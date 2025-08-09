@@ -157,11 +157,11 @@ public class UserService {
     }
 
     public ResponseEntity<ExtendedApplicationUserDTO> getUser(String token, Integer user_id) throws InvalidJWTTokenException {
-        ApplicationUser ignored = tokenService.getSenderFromJWT(token);
+        ApplicationUser sender = tokenService.getSenderFromJWT(token);
         ApplicationUser requested_user = userRepository.findById(user_id)
                 .orElseThrow(() -> new UsernameNotFoundException(Constants.USERNAME_NOT_FOUND));
 
-        return new ResponseEntity<>(new ExtendedApplicationUserDTO().fromApplicationUser(requested_user, logRepository, pinRepository), HttpStatus.OK);
+        return new ResponseEntity<>(new ExtendedApplicationUserDTO().fromApplicationUser(requested_user, logRepository, pinRepository, requested_user.getIsProfilePrivate() && !requested_user.equals(sender)), HttpStatus.OK);
     }
 
     public ResponseEntity<Map<String, String>> deleteUser(String token, String password) throws InvalidJWTTokenException, IOException {
